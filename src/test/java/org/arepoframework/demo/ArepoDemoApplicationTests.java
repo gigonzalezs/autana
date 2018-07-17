@@ -81,6 +81,7 @@ public class ArepoDemoApplicationTests {
 					pll.task(py -> {
 						
 						System.out.println("tarea 1");
+						py.response = "1";
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e) {
@@ -91,6 +92,7 @@ public class ArepoDemoApplicationTests {
 					.task(py -> {
 						
 						System.out.println("tarea 2");
+						py.response = "2";
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e) {
@@ -101,6 +103,7 @@ public class ArepoDemoApplicationTests {
 					.task(py -> {
 						
 						System.out.println("tarea 3");
+						py.response = "3";
 						try {
 							Thread.sleep(5000);
 						} catch (InterruptedException e) {
@@ -112,6 +115,7 @@ public class ArepoDemoApplicationTests {
 				.sequence(seq -> {
 					seq.task(py -> {
 						System.out.println("fin.");
+						System.out.println(py.response);
 					});
 				})
 				.compose();
@@ -129,6 +133,7 @@ public class ArepoDemoApplicationTests {
 		String result = director
 			.composition(c)
 			.process("hola process!");
+		System.out.println(result);
 	
 		System.out.println("--END testParallel");
 	}
