@@ -1,5 +1,7 @@
 package org.arepoframework.demo;
 
+import org.arepoframework.demo.composer.ProcessComposer;
+import org.arepoframework.demo.composer.ProcessComposition;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -7,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class ArepoDemoApplication {
 
 	public static void main(String[] args) {
+		
 		SpringApplication.run(ArepoDemoApplication.class, args);
 	}
 }
