@@ -2,6 +2,8 @@ package org.arepoframework.demo.composer;
 
 import java.util.List;
 
+import org.arepoframework.demo.composer.functions.TaskFunction;
+
 public class TaskComposer<R,T> extends AbstractComposer<R,T> implements ITaskLinker<R,T> {
 
 	private ITaskLinker<R,T> taskLinker;

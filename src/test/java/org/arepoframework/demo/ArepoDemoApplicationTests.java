@@ -20,28 +20,29 @@ public class ArepoDemoApplicationTests {
 	public void contextLoads() {
 	
 		ProcessComposition<BigInteger, BigInteger> c = new ProcessComposer<BigInteger, BigInteger>()
-				.mainSequence()
-				
-				.task(py -> {
+				.sequence(seq -> {
 					
-					py.response = py.request
-									.multiply(BigInteger.valueOf(2));
+					seq.task(py -> {
+						
+						py.response = py.request
+										.multiply(BigInteger.valueOf(2));
+						})
+					.task(py -> {
+						
+						py.set("A", BigInteger.valueOf(5));
+						py.set("B", BigInteger.valueOf(2));
 					})
-				.task(py -> {
-					
-					py.set("A", BigInteger.valueOf(5));
-					py.set("B", BigInteger.valueOf(2));
-				})
-				.task(py -> {
-					
-					BigInteger a = (BigInteger) py.vars("A")
-							.orElse(BigInteger.ZERO);
-					BigInteger b = (BigInteger) py.vars("B")
-							.orElse(BigInteger.ZERO);
-					
-					py.response = py.response
-							.add(a)
-							.add(b);
+					.task(py -> {
+						
+						BigInteger a = (BigInteger) py.vars("A")
+								.orElse(BigInteger.ZERO);
+						BigInteger b = (BigInteger) py.vars("B")
+								.orElse(BigInteger.ZERO);
+						
+						py.response = py.response
+								.add(a)
+								.add(b);
+					});
 				})
 				.compose();
 		

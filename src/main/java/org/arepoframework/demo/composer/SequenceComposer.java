@@ -3,6 +3,8 @@ package org.arepoframework.demo.composer;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.arepoframework.demo.composer.functions.TaskFunction;
+
 public class SequenceComposer<R,T> extends AbstractComposer<R,T> implements ITaskLinker<R,T> {
 	
 	private List<TaskFunction<R,T>> tasks = new ArrayList<>();
