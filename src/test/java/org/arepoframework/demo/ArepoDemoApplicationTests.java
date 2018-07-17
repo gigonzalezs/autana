@@ -113,7 +113,9 @@ public class ArepoDemoApplicationTests {
 					});
 				})
 				.sequence(seq -> {
+					
 					seq.task(py -> {
+						
 						System.out.println("fin.");
 						System.out.println(py.response);
 					});

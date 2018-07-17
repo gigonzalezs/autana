@@ -4,5 +4,5 @@ import org.arepoframework.demo.director.Payload;
 
 @FunctionalInterface
 public interface TaskFunction<R,T> {
-	void declare(Payload<R,T> payload);
+	void execute(Payload<R,T> payload);
 }

@@ -22,10 +22,10 @@ public class ProcessDirector<R,T>  {
 		.forEach(s -> {
 			if (!s.isParallel()) {
 				s.getTasks().stream().sequential()
-				.forEach(t -> {t.declare(payload);});
+				.forEach(t -> {t.execute(payload);});
 			} else {
 				s.getTasks().stream().parallel()
-				.forEach(t -> {t.declare(payload);});
+				.forEach(t -> {t.execute(payload);});
 			}
 		});
 	}
