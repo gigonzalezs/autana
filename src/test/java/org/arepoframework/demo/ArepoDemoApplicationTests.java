@@ -18,8 +18,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 public class ArepoDemoApplicationTests {
 
 	@Test
-	public void contextLoads() {
+	public void testSecuentialMaths() {
 	
+		System.out.println("--BEGIN testSecuentialMaths");
 		ProcessComposition<BigInteger, BigInteger> c = new ProcessComposer<BigInteger, BigInteger>()
 				.sequence(seq -> {
 					
@@ -45,12 +46,17 @@ public class ArepoDemoApplicationTests {
 								.add(b);
 					});
 				})
+				.sequence(seq -> {
+					seq.task(py -> {
+						System.out.println(py.response);
+					});
+				})
 				.compose();
 		
 	
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
-		assertThat(c.getSequences().size()).isEqualTo(1);
+		assertThat(c.getSequences().size()).isEqualTo(2);
 		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
 		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
 		
@@ -62,6 +68,133 @@ public class ArepoDemoApplicationTests {
 				.process(BigInteger.valueOf(5));
 		
 		assertThat(result).isEqualTo(BigInteger.valueOf(17));
+		System.out.println("--END testSecuentialMaths");
 	}
+	
+	@Test
+	public void testParallel() {
+	
+		System.out.println("--BEGIN testParallel");
+		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
+				.parallel(pll -> {
+					
+					pll.task(py -> {
+						
+						System.out.println("tarea 1");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						})
+					.task(py -> {
+						
+						System.out.println("tarea 2");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					})
+					.task(py -> {
+						
+						System.out.println("tarea 3");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					});
+				})
+				.sequence(seq -> {
+					seq.task(py -> {
+						System.out.println("fin.");
+					});
+				})
+				.compose();
+		
+	
+		assertThat(c).isNotNull();
+		assertThat(c.getSequences()).isNotNull();
+		assertThat(c.getSequences().size()).isEqualTo(2);
+		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
+		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
+		
+		ProcessDirector<String, String> director = new ProcessDirector<>();
+		
+		
+		String result = director
+			.composition(c)
+			.process("hola process!");
+	
+		System.out.println("--END testParallel");
+	}
+	
+	@Test
+	public void testSequence() {
+	
+		System.out.println("--BEGIN testSequence");
+		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
+				.sequence(seq -> {
+					
+					seq.task(py -> {
+						
+						System.out.println("tarea 1");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						})
+					.task(py -> {
+						
+						System.out.println("tarea 2");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					})
+					.task(py -> {
+						
+						System.out.println("tarea 3");
+						try {
+							Thread.sleep(5000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					});
+				})
+				.sequence(seq -> {
+					seq.task(py -> {
+						System.out.println("fin.");
+					});
+				})
+				.compose();
+		
+	
+		assertThat(c).isNotNull();
+		assertThat(c.getSequences()).isNotNull();
+		assertThat(c.getSequences().size()).isEqualTo(2);
+		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
+		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
+		
+		ProcessDirector<String, String> director = new ProcessDirector<>();
+		
+		
+		String result = director
+			.composition(c)
+			.process("hola process!");
+		
+		System.out.println("--END testSequence");
+		
+	}
+
 
 }

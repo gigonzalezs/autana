@@ -8,9 +8,16 @@ import org.arepoframework.demo.composer.functions.TaskFunction;
 public class SequenceComposer<R,T> extends AbstractComposer<R,T> implements ITaskLinker<R,T> {
 	
 	private List<TaskFunction<R,T>> tasks = new ArrayList<>();
+	private final boolean parallel;
 	
 	SequenceComposer (IProcessComposer<R,T> composer) {
 		super(composer);
+		this.parallel = false;
+	}
+	
+	protected SequenceComposer (IProcessComposer<R,T> composer, boolean parallel) {
+		super(composer);
+		this.parallel = parallel;
 	}
 	
 	@Override
@@ -22,5 +29,9 @@ public class SequenceComposer<R,T> extends AbstractComposer<R,T> implements ITas
 	@Override
 	public List<TaskFunction<R, T>> getTasks() {
 		return tasks;
+	}
+	
+	public boolean isParallel() {
+		return this.parallel;
 	}
 }

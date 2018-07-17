@@ -23,6 +23,14 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 		return this;
 	}
 	
+	public ProcessComposer<R,T> parallel(SequenceFunction<R,T> parallelFunction) {
+		
+		ParalellComposer<R,T> parallelComposer = new ParalellComposer<R,T>(this);
+		parallelFunction.declare(parallelComposer);
+		sequenceComposers.add(parallelComposer);
+		return this;
+	}
+	
 	public ProcessComposition<R,T> compose() {
 		composition.setSequences(
 				sequenceComposers.stream()

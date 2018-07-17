@@ -20,8 +20,13 @@ public class ProcessDirector<R,T>  {
 	public void process(Payload<R,T> payload) {
 		current_composition.getSequences().stream()
 		.forEach(s -> {
-			s.getTasks().stream()
-			.forEach(t -> {t.declare(payload);});
+			if (!s.isParallel()) {
+				s.getTasks().stream().sequential()
+				.forEach(t -> {t.declare(payload);});
+			} else {
+				s.getTasks().stream().parallel()
+				.forEach(t -> {t.declare(payload);});
+			}
 		});
 	}
 
