@@ -1,7 +1,9 @@
 package org.arepoframework.demo.composer;
 
-public interface IProcessComposer {
+import org.arepoframework.demo.composition.ProcessComposition;
+
+public interface IProcessComposer<R,T>{
 	
-	ProcessComposition compose();
+	ProcessComposition<R,T> compose();
 
 }

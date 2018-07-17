@@ -1,15 +1,18 @@
 package org.arepoframework.demo.composer;
 
-public class ProcessComposer implements IProcessComposer {
+import org.arepoframework.demo.composition.ProcessComposition;
+
+public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 	
-	private ProcessComposition composition = new ProcessComposition();
-	private ProcessComposer() {}
+	private ProcessComposition<R,T> composition = new ProcessComposition<R,T>();
 	
-	public static SequenceComposer mainSequence() {
-		return new SequenceComposer(new ProcessComposer());
+	public ProcessComposer() {}
+	
+	public SequenceComposer<R,T> mainSequence() {
+		return new SequenceComposer<R,T>(new ProcessComposer<R,T>());
 	}
 	
-	public ProcessComposition compose() {
+	public ProcessComposition<R,T> compose() {
 		return composition;
 	}
 }

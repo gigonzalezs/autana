@@ -1,13 +1,24 @@
 package org.arepoframework.demo.composer;
 
-public class TaskComposer extends AbstractComposer implements ITaskLinker {
+import java.util.List;
 
-	protected TaskComposer(IProcessComposer composer) {
+public class TaskComposer<R,T> extends AbstractComposer<R,T> implements ITaskLinker<R,T> {
+
+	private ITaskLinker<R,T> taskLinker;
+	
+	protected TaskComposer(IProcessComposer<R,T> composer, ITaskLinker<R,T> taskLinker) {
 		super(composer);
+		this.taskLinker = taskLinker;
 	}
 	
 	@Override
-	public TaskComposer task() {
-		return new TaskComposer(super.getComposer());
+	public TaskComposer<R,T> task(TaskFunction<R,T> taskFunction) {
+		this.getTasks().add(taskFunction);
+		return new TaskComposer<R, T>(super.getComposer(), taskLinker);
+	}
+
+	@Override
+	public List<TaskFunction<R, T>> getTasks() {
+		return taskLinker.getTasks();
 	}
 }

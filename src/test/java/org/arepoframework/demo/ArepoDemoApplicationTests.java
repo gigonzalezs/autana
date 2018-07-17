@@ -3,8 +3,10 @@ package org.arepoframework.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import java.math.BigInteger;
+
 import org.arepoframework.demo.composer.ProcessComposer;
-import org.arepoframework.demo.composer.ProcessComposition;
+import org.arepoframework.demo.composition.ProcessComposition;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -16,15 +18,35 @@ public class ArepoDemoApplicationTests {
 
 	@Test
 	public void contextLoads() {
-		
-		ProcessComposition p = ProcessComposer
+	
+		ProcessComposition<BigInteger, BigInteger> c = new ProcessComposer<BigInteger, BigInteger>()
 				.mainSequence()
-				.task()
-				.task()
-				.task()
+				
+				.task(py -> {
+					
+					py.response = py.request
+									.multiply(BigInteger.valueOf(2));
+					})
+				.task(py -> {
+					
+					py.set("A", BigInteger.valueOf(5));
+					py.set("B", BigInteger.valueOf(2));
+				})
+				.task(py -> {
+					
+					BigInteger a = (BigInteger) py.vars("A")
+							.orElse(BigInteger.ZERO);
+					BigInteger b = (BigInteger) py.vars("B")
+							.orElse(BigInteger.ZERO);
+					
+					py.response = py.response
+							.add(a)
+							.add(b);
+				})
 				.compose();
 		
-		assertThat(p).isNotNull();
+	
+		assertThat(c).isNotNull();
 		
 	}
 
