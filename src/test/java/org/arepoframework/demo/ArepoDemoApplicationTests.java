@@ -7,6 +7,7 @@ import java.math.BigInteger;
 
 import org.arepoframework.demo.composer.ProcessComposer;
 import org.arepoframework.demo.composition.ProcessComposition;
+import org.arepoframework.demo.director.ProcessDirector;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,7 +49,19 @@ public class ArepoDemoApplicationTests {
 		
 	
 		assertThat(c).isNotNull();
+		assertThat(c.getSequences()).isNotNull();
+		assertThat(c.getSequences().size()).isEqualTo(1);
+		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
+		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
 		
+		ProcessDirector<BigInteger, BigInteger> director = new ProcessDirector<>();
+		
+		
+		BigInteger result = director
+				.composition(c)
+				.process(BigInteger.valueOf(5));
+		
+		assertThat(result).isEqualTo(BigInteger.valueOf(17));
 	}
 
 }
