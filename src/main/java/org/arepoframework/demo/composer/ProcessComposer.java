@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.arepoframework.demo.composer.functions.ConditionFunction;
+import org.arepoframework.demo.composer.functions.LoopFunction;
 import org.arepoframework.demo.composer.functions.ParallelFunction;
 import org.arepoframework.demo.composer.functions.SequenceFunction;
 import org.arepoframework.demo.composition.ProcessComposition;
@@ -26,9 +28,25 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 	
 	public ProcessComposer<R,T> parallel(ParallelFunction<R,T> parallelFunction) {
 		
-		ParalellComposer<R,T> parallelComposer = new ParalellComposer<R,T>(this);
+		ParallelComposer<R,T> parallelComposer = new ParallelComposer<R,T>(this);
 		parallelFunction.declare(parallelComposer);
 		sequenceComposers.add(parallelComposer);
+		return this;
+	}
+	
+	public ProcessComposer<R,T> condition(ConditionFunction<R,T> conditionFunction) {
+		
+		ConditionComposer<R,T> conditionComposer = new ConditionComposer<R,T>(this);
+		conditionFunction.declare(conditionComposer);
+		sequenceComposers.add(conditionComposer);
+		return this;
+	}
+	
+	public ProcessComposer<R,T> loop(LoopFunction<R,T> loopFunction) {
+		
+		LoopComposer<R,T> loopComposer = new LoopComposer<R,T>(this);
+		loopFunction.declare(loopComposer);
+		sequenceComposers.add(loopComposer);
 		return this;
 	}
 	

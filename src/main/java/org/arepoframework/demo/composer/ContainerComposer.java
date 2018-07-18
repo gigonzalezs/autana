@@ -7,6 +7,11 @@ import org.arepoframework.demo.composer.functions.TaskFunction;
 
 public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T> implements ITaskLinker<R,T> {
 	
+	protected final static boolean SEQUENTIAL_CONTAINER = false;
+	protected final static boolean PARALLEL_CONTAINER = true;
+	protected final static boolean NO_CONDITION_REQUIRED = false;
+	protected final static boolean CONDITION_REQUIRED = true;
+	
 	private List<TaskFunction<R,T>> tasks = new ArrayList<>();
 	private final boolean parallel;
 	
