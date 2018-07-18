@@ -12,7 +12,7 @@ import org.arepoframework.demo.composer.declarators.YawDeclarator;
 public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T> 
 	implements ITaskLinker<R,T>, IContainerComposer<R, T> {
 	
-	private final List<TaskDeclarator<R,T>> tasks = new ArrayList<>();
+	private final List<Step<R,T>> tasks = new ArrayList<>();
 	
 	protected ContainerComposer (IProcessComposer<R,T> composer) {
 		super(composer);
@@ -20,12 +20,12 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 	
 	@Override
 	public TaskComposer<R, T> task(TaskDeclarator<R,T> taskFunction) {
-		tasks.add(taskFunction);
+		tasks.add(new ExecutionStep<R,T>(taskFunction));
 		return new TaskComposer<R,T>(super.getComposer(), this);
 	}
 
 	@Override
-	public List<TaskDeclarator<R, T>> getTasks() {
+	public List<Step<R,T>> getTasks() {
 		return tasks;
 	}
 	

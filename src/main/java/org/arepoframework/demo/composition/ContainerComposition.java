@@ -10,17 +10,18 @@ import org.arepoframework.demo.composer.declarators.TaskDeclarator;
 import org.arepoframework.demo.composer.LoopComposer;
 import org.arepoframework.demo.composer.ParallelComposer;
 import org.arepoframework.demo.composer.SequenceComposer;
+import org.arepoframework.demo.composer.Step;
 import org.arepoframework.demo.director.Payload;
 
 public class ContainerComposition<R,T> {
 	
-	private final List<TaskDeclarator<R,T>> tasks;
+	private final List<Step<R,T>> tasks;
 	private final boolean parallel;
 	private final boolean conditional;
 	private final boolean loopEnabled;
 	private final Predicate<Payload<R,T>> predicate;
 	
-	public ContainerComposition(boolean parallel, List<TaskDeclarator<R,T>> tasks) {
+	public ContainerComposition(boolean parallel, List<Step<R,T>> tasks) {
 		this.parallel = parallel;
 		this.tasks = tasks;
 		this.conditional = false;
@@ -28,7 +29,7 @@ public class ContainerComposition<R,T> {
 		this.loopEnabled = false;
 	}
 	
-	public ContainerComposition(boolean loopEnabled, Predicate<Payload<R,T>> condition, List<TaskDeclarator<R,T>> tasks) {
+	public ContainerComposition(boolean loopEnabled, Predicate<Payload<R,T>> condition, List<Step<R,T>> tasks) {
 		this.parallel = false;
 		this.tasks = tasks;
 		this.conditional = true;
@@ -65,7 +66,7 @@ public class ContainerComposition<R,T> {
 		return composition;
 	}
 
-	public List<TaskDeclarator<R, T>> getTasks() {
+	public List<Step<R,T>> getTasks() {
 		return tasks;
 	}
 	

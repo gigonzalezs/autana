@@ -15,12 +15,12 @@ public final class TaskComposer<R,T> extends AbstractComposer<R,T> implements IT
 	
 	@Override
 	public TaskComposer<R,T> task(TaskDeclarator<R,T> taskFunction) {
-		taskLinker.getTasks().add(taskFunction);
+		taskLinker.getTasks().add(new ExecutionStep<R,T>(taskFunction));
 		return new TaskComposer<R, T>(super.getComposer(), taskLinker);
 	}
 
 	@Override
-	public List<TaskDeclarator<R, T>> getTasks() {
+	public List<Step<R,T>> getTasks() {
 		return taskLinker.getTasks();
 	}
 }

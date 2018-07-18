@@ -8,5 +8,5 @@ public interface ITaskLinker<R,T> {
 
 	TaskComposer<R,T> task(TaskDeclarator<R,T> taskFunction);
 	
-	List<TaskDeclarator<R,T>> getTasks();
+	List<Step<R,T>> getTasks();
 }
