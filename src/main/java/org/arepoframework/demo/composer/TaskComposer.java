@@ -9,7 +9,7 @@ public class TaskComposer<R,T> extends AbstractComposer<R,T> implements ITaskLin
 	private ITaskLinker<R,T> taskLinker;
 	
 	protected TaskComposer(IProcessComposer<R,T> composer, ITaskLinker<R,T> taskLinker) {
-		super(composer);
+		super(composer, false);
 		this.taskLinker = taskLinker;
 	}
 	

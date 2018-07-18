@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.arepoframework.demo.composer.functions.ConditionFunction;
+import org.arepoframework.demo.composer.functions.LoopFunction;
+import org.arepoframework.demo.composer.functions.ParallelFunction;
 import org.arepoframework.demo.composer.functions.SequenceFunction;
 import org.arepoframework.demo.composition.ProcessComposition;
-import org.arepoframework.demo.composition.SequenceComposition;
+import org.arepoframework.demo.composition.ContainerComposition;
 
 public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 	
 	private ProcessComposition<R,T> composition = new ProcessComposition<R,T>();
-	private List<SequenceComposer<R,T>> sequenceComposers = new ArrayList<>();
+	private List<ContainerComposer<R,T>> sequenceComposers = new ArrayList<>();
 	
 	public ProcessComposer() {}
 	
@@ -23,18 +26,34 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 		return this;
 	}
 	
-	public ProcessComposer<R,T> parallel(SequenceFunction<R,T> parallelFunction) {
+	public ProcessComposer<R,T> parallel(ParallelFunction<R,T> parallelFunction) {
 		
-		ParalellComposer<R,T> parallelComposer = new ParalellComposer<R,T>(this);
+		ParallelComposer<R,T> parallelComposer = new ParallelComposer<R,T>(this);
 		parallelFunction.declare(parallelComposer);
 		sequenceComposers.add(parallelComposer);
+		return this;
+	}
+	
+	public ProcessComposer<R,T> condition(ConditionFunction<R,T> conditionFunction) {
+		
+		ConditionComposer<R,T> conditionComposer = new ConditionComposer<R,T>(this);
+		conditionFunction.declare(conditionComposer);
+		sequenceComposers.add(conditionComposer);
+		return this;
+	}
+	
+	public ProcessComposer<R,T> loop(LoopFunction<R,T> loopFunction) {
+		
+		LoopComposer<R,T> loopComposer = new LoopComposer<R,T>(this);
+		loopFunction.declare(loopComposer);
+		sequenceComposers.add(loopComposer);
 		return this;
 	}
 	
 	public ProcessComposition<R,T> compose() {
 		composition.setSequences(
 				sequenceComposers.stream()
-				.map(composer -> SequenceComposition.<R, T>fromSequenceComposer(composer))
+				.map(composer -> ContainerComposition.<R, T>fromContainerComposer(composer))
 				.collect(Collectors.toList()));
 		return composition;
 	}

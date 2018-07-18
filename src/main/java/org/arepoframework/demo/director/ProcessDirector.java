@@ -19,10 +19,16 @@ public class ProcessDirector<R,T>  {
 	
 	public void process(Payload<R,T> payload) {
 		current_composition.getSequences().stream()
+		.filter(s -> s.isConditional() == false 
+				||  (s.isConditional() == true && s.getPredicate().test(payload) == true))
 		.forEach(s -> {
 			if (!s.isParallel()) {
-				s.getTasks().stream().sequential()
-				.forEach(t -> {t.execute(payload);});
+				do {
+					s.getTasks().stream().sequential()
+					.forEach(t -> {t.execute(payload);});
+				} while (s.isConditional() == true 
+						&& s.isLoopEnabed() == true 
+						&& s.getPredicate().test(payload) == true);
 			} else {
 				s.getTasks().stream().parallel()
 				.forEach(t -> {t.execute(payload);});

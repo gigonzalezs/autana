@@ -5,9 +5,11 @@ import org.arepoframework.demo.composition.ProcessComposition;
 public abstract class AbstractComposer<R,T> implements IProcessComposer<R,T> {
 
 	private IProcessComposer<R,T> composer;
+	private final boolean conditional;
 	
-	protected AbstractComposer (IProcessComposer<R,T> composer) {
+	protected AbstractComposer (IProcessComposer<R,T> composer, boolean conditional) {
 		this.composer = composer;
+		this.conditional = conditional;
 	}
 	
 	protected IProcessComposer<R,T> getComposer() {
@@ -17,6 +19,10 @@ public abstract class AbstractComposer<R,T> implements IProcessComposer<R,T> {
 	@Override
 	public ProcessComposition<R,T> compose() {
 		return composer.compose();
+	}
+	
+	public boolean isConditional() {
+		return conditional;
 	}
 
 }

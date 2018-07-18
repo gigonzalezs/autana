@@ -5,13 +5,13 @@ import java.util.List;
 
 public class ProcessComposition<R,T> {
 	
-	private List<SequenceComposition<R, T>> sequences = new ArrayList<>();
+	private List<ContainerComposition<R, T>> sequences = new ArrayList<>();
 
-	public List<SequenceComposition<R, T>> getSequences() {
+	public List<ContainerComposition<R, T>> getSequences() {
 		return sequences;
 	}
 
-	public void setSequences(List<SequenceComposition<R, T>> sequences) {
+	public void setSequences(List<ContainerComposition<R, T>> sequences) {
 		this.sequences = sequences;
 	}
 	
