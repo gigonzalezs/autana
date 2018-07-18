@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.arepoframework.demo.composer.ExecutionStep;
 import org.arepoframework.demo.composer.Step;
+import org.arepoframework.demo.composition.ContainerComposition;
 import org.arepoframework.demo.composition.ProcessComposition;
 
 public class ProcessDirector<R,T>  {
@@ -23,20 +24,8 @@ public class ProcessDirector<R,T>  {
 	
 	public void process(Payload<R,T> payload) {
 		current_composition.getSequences().stream()
-		.filter(s -> s.isConditional() == false 
-				||  (s.isConditional() == true && s.getPredicate().test(payload) == true))
-		.forEach(s -> {
-			if (!s.isParallel()) {
-				do {
-					s.getTasks().stream().sequential()
-					.forEach(t -> {executeStep(t,payload);});
-				} while (s.isConditional() == true 
-						&& s.isLoopEnabed() == true 
-						&& s.getPredicate().test(payload) == true);
-			} else {
-				s.getTasks().stream().parallel()
-				.forEach(t -> {executeStep(t,payload);});
-			}
+		.forEach(container -> {
+			executeContainer(container, payload);
 		});
 	}
 	
@@ -44,6 +33,30 @@ public class ProcessDirector<R,T>  {
 		if (step.getClass().isAssignableFrom(ExecutionStep.class)) {
 			ExecutionStep<R,T> executionStep = (ExecutionStep<R, T>) step;
 			executionStep.getStepExecutor().execute(payload);
+		}
+	}
+	
+	private void executeContainer(ContainerComposition<R, T> container, Payload<R,T> payload) {
+		
+		if (container.isConditional() == false 
+				||  (container.isConditional() == true 
+					&& container.getPredicate().test(payload) == true)) {
+		
+			if (!container.isParallel()) {
+				do {
+					container.getTasks().stream().sequential()
+					.forEach(t -> {
+						executeStep(t,payload);
+					});
+				} while (container.isConditional() == true 
+						&& container.isLoopEnabed() == true 
+						&& container.getPredicate().test(payload) == true);
+			} else {
+				container.getTasks().stream().parallel()
+				.forEach(t -> {
+					executeStep(t,payload);
+				});
+			}
 		}
 	}
 
