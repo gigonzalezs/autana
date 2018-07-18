@@ -11,13 +11,14 @@ import org.arepoframework.demo.composer.declarators.SequenceDeclarator;
 import org.arepoframework.demo.composer.declarators.YawDeclarator;
 import org.arepoframework.demo.composition.ContainerComposition;
 
-public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
+public class ProcessComposer<R,T> implements IProcessComposer<R,T>, IContainerComposer<R, T> {
 	
 	private ProcessComposition<R,T> composition = new ProcessComposition<R,T>();
 	private List<ContainerComposer<R,T>> containerComposers = new ArrayList<>();
 	
 	public ProcessComposer() {}
 
+	@Override
 	public ProcessComposer<R,T> sequence(SequenceDeclarator<R,T> sequenceFunction) {
 		
 		SequenceComposer<R,T> sequenceComposer = new SequenceComposer<R,T>(this);
@@ -26,6 +27,7 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 		return this;
 	}
 	
+	@Override
 	public ProcessComposer<R,T> parallel(ParallelDeclarator<R,T> parallelFunction) {
 		
 		ParallelComposer<R,T> parallelComposer = new ParallelComposer<R,T>(this);
@@ -34,6 +36,7 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 		return this;
 	}
 	
+	@Override
 	public ProcessComposer<R,T> yaw(YawDeclarator<R,T> conditionFunction) {
 		
 		YawComposer<R,T> conditionComposer = new YawComposer<R,T>(this);
@@ -42,6 +45,7 @@ public class ProcessComposer<R,T> implements IProcessComposer<R,T> {
 		return this;
 	}
 	
+	@Override
 	public ProcessComposer<R,T> loop(LoopDeclarator<R,T> loopFunction) {
 		
 		LoopComposer<R,T> loopComposer = new LoopComposer<R,T>(this);
