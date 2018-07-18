@@ -2,6 +2,7 @@ package org.arepoframework.demo.director;
 
 import java.util.List;
 
+import org.arepoframework.demo.composer.ContainerStep;
 import org.arepoframework.demo.composer.ExecutionStep;
 import org.arepoframework.demo.composer.Step;
 import org.arepoframework.demo.composition.ContainerComposition;
@@ -30,9 +31,15 @@ public class ProcessDirector<R,T>  {
 	}
 	
 	private void executeStep(Step<R,T> step, Payload<R,T> payload) {
+		
 		if (step.getClass().isAssignableFrom(ExecutionStep.class)) {
 			ExecutionStep<R,T> executionStep = (ExecutionStep<R, T>) step;
 			executionStep.getStepExecutor().execute(payload);
+			
+		} else if (step.getClass().isAssignableFrom(ContainerStep.class)) {
+			ContainerStep<R,T> containerStep = (ContainerStep<R, T>) step;
+			ContainerComposition<R,T> subComposition = ContainerComposition.fromContainerComposer(containerStep.getContainer());
+			executeContainer(subComposition, payload);
 		}
 	}
 	

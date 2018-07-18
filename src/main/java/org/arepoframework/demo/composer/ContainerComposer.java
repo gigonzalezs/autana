@@ -34,10 +34,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		SequenceComposer<R,T> sequenceComposer = new SequenceComposer<R,T>(this);
 		sequenceFunction.declare(sequenceComposer);
-		//containerComposers.add(sequenceComposer);
-		this.task(t -> {
-			System.out.println("run inner sequence");
-		});
+		tasks.add(new ContainerStep<R,T>(sequenceComposer));
 		return this;
 	}
 	
@@ -46,10 +43,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		ParallelComposer<R,T> parallelComposer = new ParallelComposer<R,T>(this);
 		parallelFunction.declare(parallelComposer);
-		//containerComposers.add(parallelComposer);
-		this.task(t -> {
-			System.out.println("run inner parallel");
-		});
+		tasks.add(new ContainerStep<R,T>(parallelComposer));
 		return this;
 	}
 	
@@ -58,10 +52,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		YawComposer<R,T> conditionComposer = new YawComposer<R,T>(this);
 		conditionFunction.declare(conditionComposer);
-		//containerComposers.add(conditionComposer);
-		this.task(t -> {
-			System.out.println("run inner yaw");
-		});
+		tasks.add(new ContainerStep<R,T>(conditionComposer));
 		return this;
 	}
 	
@@ -70,10 +61,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		LoopComposer<R,T> loopComposer = new LoopComposer<R,T>(this);
 		loopFunction.declare(loopComposer);
-		//containerComposers.add(loopComposer);
-		this.task(t -> {
-			System.out.println("run inner loop");
-		});
+		tasks.add(new ContainerStep<R,T>(loopComposer));
 		return this;
 	}
 }

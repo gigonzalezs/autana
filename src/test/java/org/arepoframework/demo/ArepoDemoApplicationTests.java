@@ -323,5 +323,69 @@ public class ArepoDemoApplicationTests {
 		System.out.println("--END testCondition");
 		
 	}
+	
+	@Test
+	public void testNestedSequences() {
+	
+		System.out.println("--BEGIN testNestedSequences");
+		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
+				
+				.sequence(seq -> {
+					
+					seq.sequence(seq2 -> {
+						
+						seq2.task(py -> {
+							
+							System.out.println("tarea 1-A debe ejecutarse");
+							py.response = "EJECUTADO1";
+						})
+						.task(py -> {
+							
+							System.out.println("tarea 2-A debe ejecutarse");
+							py.response = py.response + "-EJECUTADO2";
+						});
+					})
+					.sequence(seq2 -> {
+						
+						seq2.task(py -> {
+							
+							System.out.println("tarea 1-B debe ejecutarse");
+							py.response = py.response + "-EJECUTADO3";
+						})
+						.task(py -> {
+							
+							System.out.println("tarea 2-B debe ejecutarse");
+							py.response = py.response + "-EJECUTADO4";
+						});
+					})
+					.task(py -> {
+						System.out.println("tarea 0-A debe ejecutarse");
+						py.response = py.response + "-EJECUTADO5";
+					});
+				})
+				.sequence(seq -> {
+					seq.task(py -> {
+						System.out.println("fin.");
+					});
+				})
+				.compose();
+		
+	
+		assertThat(c).isNotNull();
+		assertThat(c.getSequences()).isNotNull();
+		assertThat(c.getSequences().size()).isEqualTo(2);
+		
+		ProcessDirector<String, String> director = new ProcessDirector<>();
+		
+		
+		String result = director
+			.composition(c)
+			.process("UNO");
+		
+		assertThat(result).isEqualTo("EJECUTADO1-EJECUTADO2-EJECUTADO3-EJECUTADO4-EJECUTADO5");
+		
+		System.out.println("--END testNestedSequences");
+		
+	}
 
 }
