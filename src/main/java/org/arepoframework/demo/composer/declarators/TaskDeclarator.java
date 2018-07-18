@@ -1,8 +1,8 @@
-package org.arepoframework.demo.composer.functions;
+package org.arepoframework.demo.composer.declarators;
 
 import org.arepoframework.demo.director.Payload;
 
 @FunctionalInterface
-public interface TaskFunction<R,T> {
+public interface TaskDeclarator<R,T> {
 	void execute(Payload<R,T> payload);
 }

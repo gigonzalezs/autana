@@ -1,8 +1,8 @@
-package org.arepoframework.demo.composer.functions;
+package org.arepoframework.demo.composer.declarators;
 
 import org.arepoframework.demo.composer.LoopComposer;
 
 @FunctionalInterface
-public interface LoopFunction<R,T> {
+public interface LoopDeclarator<R,T> {
 	void declare(LoopComposer<R,T> sequence);
 }

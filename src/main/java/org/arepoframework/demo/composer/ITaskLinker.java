@@ -2,11 +2,11 @@ package org.arepoframework.demo.composer;
 
 import java.util.List;
 
-import org.arepoframework.demo.composer.functions.TaskFunction;
+import org.arepoframework.demo.composer.declarators.TaskDeclarator;
 
 public interface ITaskLinker<R,T> {
 
-	TaskComposer<R,T> task(TaskFunction<R,T> taskFunction);
+	TaskComposer<R,T> task(TaskDeclarator<R,T> taskFunction);
 	
-	List<TaskFunction<R,T>> getTasks();
+	List<TaskDeclarator<R,T>> getTasks();
 }

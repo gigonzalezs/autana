@@ -267,7 +267,7 @@ public class ArepoDemoApplicationTests {
 		System.out.println("--BEGIN testCondition");
 		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
 				
-				.condition(con -> {
+				.yaw(con -> {
 					
 					con.predicate(py -> py.request.equals("UNO"))
 					
@@ -282,7 +282,7 @@ public class ArepoDemoApplicationTests {
 						py.response = py.response + "-EJECUTADO2";
 					});
 				})
-				.condition(con -> {
+				.yaw(con -> {
 					
 					con.predicate(py -> py.request.equals("DOS"))
 					

@@ -4,15 +4,15 @@ import java.util.function.Predicate;
 
 import org.arepoframework.demo.director.Payload;
 
-public final class ConditionComposer <R, T> extends ContainerComposer<R,T> {
+public abstract class ConditionedComposer<R,T> extends ContainerComposer<R,T> {
 	
 	private Predicate<Payload<R,T>> predicateFunction;
 	
-	ConditionComposer (IProcessComposer<R,T> composer) {
-		super(composer, SEQUENTIAL_CONTAINER, CONDITION_REQUIRED);
+	protected ConditionedComposer(IProcessComposer<R, T> composer) {
+		super(composer);
 	}
 	
-	public ConditionComposer <R, T> predicate(Predicate<Payload<R,T>> predicateFunction) {
+	public ConditionedComposer <R, T> predicate(Predicate<Payload<R,T>> predicateFunction) {
 		this.predicateFunction = predicateFunction;
 		return this;
 	}

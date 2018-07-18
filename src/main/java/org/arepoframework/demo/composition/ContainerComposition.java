@@ -3,21 +3,24 @@ package org.arepoframework.demo.composition;
 import java.util.List;
 
 import org.arepoframework.demo.composer.ContainerComposer;
-import org.arepoframework.demo.composer.functions.TaskFunction;
+
 import java.util.function.Predicate;
-import org.arepoframework.demo.composer.ConditionComposer;
+import org.arepoframework.demo.composer.YawComposer;
+import org.arepoframework.demo.composer.declarators.TaskDeclarator;
 import org.arepoframework.demo.composer.LoopComposer;
+import org.arepoframework.demo.composer.ParallelComposer;
+import org.arepoframework.demo.composer.SequenceComposer;
 import org.arepoframework.demo.director.Payload;
 
 public class ContainerComposition<R,T> {
 	
-	private final List<TaskFunction<R,T>> tasks;
+	private final List<TaskDeclarator<R,T>> tasks;
 	private final boolean parallel;
 	private final boolean conditional;
 	private final boolean loopEnabled;
 	private final Predicate<Payload<R,T>> predicate;
 	
-	public ContainerComposition(boolean parallel, List<TaskFunction<R,T>> tasks) {
+	public ContainerComposition(boolean parallel, List<TaskDeclarator<R,T>> tasks) {
 		this.parallel = parallel;
 		this.tasks = tasks;
 		this.conditional = false;
@@ -25,7 +28,7 @@ public class ContainerComposition<R,T> {
 		this.loopEnabled = false;
 	}
 	
-	public ContainerComposition(boolean loopEnabled, Predicate<Payload<R,T>> condition, List<TaskFunction<R,T>> tasks) {
+	public ContainerComposition(boolean loopEnabled, Predicate<Payload<R,T>> condition, List<TaskDeclarator<R,T>> tasks) {
 		this.parallel = false;
 		this.tasks = tasks;
 		this.conditional = true;
@@ -36,17 +39,25 @@ public class ContainerComposition<R,T> {
 	public static <R,T> ContainerComposition<R,T> fromContainerComposer(ContainerComposer<R,T> composer) {
 		
 		ContainerComposition<R,T> composition = null;
-		if (!composer.isConditional()) {
+		
+		if (composer.getClass().isAssignableFrom(SequenceComposer.class)) {
 			
 			composition = new ContainerComposition<R,T>(
-					composer.isParallel(), composer.getTasks());
+					false, composer.getTasks());
 			
-		} else if (composer.getClass().isAssignableFrom(ConditionComposer.class)) {
-			ConditionComposer<R,T> conditionalComposer = (ConditionComposer<R, T>) composer;
+		} else if (composer.getClass().isAssignableFrom(ParallelComposer.class)) {
+			
+			composition = new ContainerComposition<R,T>(
+					true, composer.getTasks());
+			
+		} else if (composer.getClass().isAssignableFrom(YawComposer.class)) {
+			
+			YawComposer<R,T> yawComposer = (YawComposer<R, T>) composer;
 			composition = new ContainerComposition<R,T>(false,
-					conditionalComposer.getPredicate(), composer.getTasks());
+					yawComposer.getPredicate(), composer.getTasks());
 				
 		} else if (composer.getClass().isAssignableFrom(LoopComposer.class)) {
+			
 			LoopComposer<R,T> loopComposer = (LoopComposer<R, T>) composer;
 			composition = new ContainerComposition<R,T>(true,
 					loopComposer.getPredicate(), composer.getTasks());
@@ -54,7 +65,7 @@ public class ContainerComposition<R,T> {
 		return composition;
 	}
 
-	public List<TaskFunction<R, T>> getTasks() {
+	public List<TaskDeclarator<R, T>> getTasks() {
 		return tasks;
 	}
 	
