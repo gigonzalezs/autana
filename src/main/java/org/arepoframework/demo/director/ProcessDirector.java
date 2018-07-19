@@ -45,16 +45,22 @@ public class ProcessDirector<R,T>  {
 			try {
 				executionStep.getStepExecutor().execute(payload);
 			} catch (Throwable t) {
-				if (rootExceptionHandlerDeclarator != null) {
-					ExceptionHandler handler = new ExceptionHandler(t);
-					rootExceptionHandlerDeclarator.handle(handler);
-				}
+				handleExecutionException(t);
 			}
 			
 		} else if (step.getClass().isAssignableFrom(ContainerStep.class)) {
 			ContainerStep<R,T> containerStep = (ContainerStep<R, T>) step;
 			ContainerComposition<R,T> subComposition = ContainerComposition.fromContainerComposer(containerStep.getContainer());
 			executeContainer(subComposition, payload);
+		}
+	}
+	
+	private void handleExecutionException(Throwable t) {
+		if (rootExceptionHandlerDeclarator != null) {
+			ExceptionHandler handler = new ExceptionHandler(t);
+			rootExceptionHandlerDeclarator.handle(handler);
+		} else {
+			throw new CompositionException(t);
 		}
 	}
 	
