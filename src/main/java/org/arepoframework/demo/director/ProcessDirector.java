@@ -1,8 +1,5 @@
 package org.arepoframework.demo.director;
 
-import java.util.List;
-import java.util.function.Supplier;
-
 import org.arepoframework.demo.composer.ContainerStep;
 import org.arepoframework.demo.composer.ExceptionHandler;
 import org.arepoframework.demo.composer.ExecutionStep;
@@ -21,15 +18,16 @@ public class ProcessDirector<R,T>  {
 		return this;
 	}
 	
+	public ProcessDirector<R,T> onException(ExceptionHandlerDeclarator exceptionHandlerDeclarator) {
+		rootExceptionHandlerDeclarator = exceptionHandlerDeclarator;
+		return this;
+    }
+	
 	public T process(R request) {
 		Payload<R,T> payload = new Payload<>(request);
 		process(payload);	
 		return payload.response;
 	}
-	
-	public void onException(ExceptionHandlerDeclarator exceptionHandlerDeclarator) {
-		rootExceptionHandlerDeclarator = exceptionHandlerDeclarator;
-    }
 	
 	public void process(Payload<R,T> payload) {
 		current_composition.getSequences().stream()
