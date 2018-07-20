@@ -5,14 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.math.BigInteger;
 
-import org.arepoframework.demo.composer.ProcessComposer;
-import org.arepoframework.demo.composition.ProcessComposition;
-import org.arepoframework.demo.director.CompositionException;
-import org.arepoframework.demo.director.ProcessDirector;
+import org.autanaframework.demo.composer.ProcessComposer;
+import org.autanaframework.demo.composition.ProcessComposition;
+import org.autanaframework.demo.director.CompositionException;
+import org.autanaframework.demo.director.ProcessDirector;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
 
 //@RunWith(SpringRunner.class)
 //@SpringBootTest
