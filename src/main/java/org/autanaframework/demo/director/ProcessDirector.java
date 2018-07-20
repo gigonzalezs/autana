@@ -70,7 +70,7 @@ public class ProcessDirector<R,T>  {
 		
 			if (!container.isParallel()) {
 				do {
-					container.getTasks().stream().sequential()
+					container.getSteps().stream().sequential()
 					.forEach(t -> {
 						executeStep(t,payload);
 					});
@@ -78,7 +78,7 @@ public class ProcessDirector<R,T>  {
 						&& container.isLoopEnabed() == true 
 						&& container.getPredicate().test(payload) == true);
 			} else {
-				container.getTasks().stream().parallel()
+				container.getSteps().stream().parallel()
 				.forEach(t -> {
 					executeStep(t,payload);
 				});

@@ -1,17 +1,17 @@
 package org.autanaframework.demo.composer;
 
-import org.autanaframework.demo.composer.declarators.TaskDeclarator;
+import org.autanaframework.demo.composer.declarators.StepDeclarator;
 
 public final class ExecutionStep<R, T> extends Step<R, T> {
 	
-	private final TaskDeclarator<R,T> stepExecutor;
+	private final StepDeclarator<R,T> stepExecutor;
 	
-	public ExecutionStep(TaskDeclarator<R,T> stepExecutor) {
+	public ExecutionStep(StepDeclarator<R,T> stepExecutor) {
 		super();
 		this.stepExecutor = stepExecutor;
 	}
 	
-	public TaskDeclarator<R,T> getStepExecutor() {
+	public StepDeclarator<R,T> getStepExecutor() {
 		return stepExecutor;
 	}
 

@@ -6,27 +6,27 @@ import java.util.List;
 import org.autanaframework.demo.composer.declarators.LoopDeclarator;
 import org.autanaframework.demo.composer.declarators.ParallelDeclarator;
 import org.autanaframework.demo.composer.declarators.SequenceDeclarator;
-import org.autanaframework.demo.composer.declarators.TaskDeclarator;
+import org.autanaframework.demo.composer.declarators.StepDeclarator;
 import org.autanaframework.demo.composer.declarators.YawDeclarator;
 
 public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T> 
-	implements ITaskLinker<R,T>, IContainerComposer<R, T> {
+	implements IStepLinker<R,T>, IContainerComposer<R, T> {
 	
-	private final List<Step<R,T>> tasks = new ArrayList<>();
+	private final List<Step<R,T>> steps = new ArrayList<>();
 	
 	protected ContainerComposer (IProcessComposer<R,T> composer) {
 		super(composer);
 	}
 	
 	@Override
-	public TaskComposer<R, T> task(TaskDeclarator<R,T> taskFunction) {
-		tasks.add(new ExecutionStep<R,T>(taskFunction));
-		return new TaskComposer<R,T>(super.getComposer(), this);
+	public StepComposer<R, T> step(StepDeclarator<R,T> stepDeclaratorFunction) {
+		steps.add(new ExecutionStep<R,T>(stepDeclaratorFunction));
+		return new StepComposer<R,T>(super.getComposer(), this);
 	}
 
 	@Override
-	public List<Step<R,T>> getTasks() {
-		return tasks;
+	public List<Step<R,T>> getSteps() {
+		return steps;
 	}
 	
 	@Override
@@ -34,7 +34,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		SequenceComposer<R,T> sequenceComposer = new SequenceComposer<R,T>(this);
 		sequenceFunction.declare(sequenceComposer);
-		tasks.add(new ContainerStep<R,T>(sequenceComposer));
+		steps.add(new ContainerStep<R,T>(sequenceComposer));
 		return this;
 	}
 	
@@ -43,7 +43,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		ParallelComposer<R,T> parallelComposer = new ParallelComposer<R,T>(this);
 		parallelFunction.declare(parallelComposer);
-		tasks.add(new ContainerStep<R,T>(parallelComposer));
+		steps.add(new ContainerStep<R,T>(parallelComposer));
 		return this;
 	}
 	
@@ -52,7 +52,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		YawComposer<R,T> conditionComposer = new YawComposer<R,T>(this);
 		conditionFunction.declare(conditionComposer);
-		tasks.add(new ContainerStep<R,T>(conditionComposer));
+		steps.add(new ContainerStep<R,T>(conditionComposer));
 		return this;
 	}
 	
@@ -61,7 +61,7 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 		
 		LoopComposer<R,T> loopComposer = new LoopComposer<R,T>(this);
 		loopFunction.declare(loopComposer);
-		tasks.add(new ContainerStep<R,T>(loopComposer));
+		steps.add(new ContainerStep<R,T>(loopComposer));
 		return this;
 	}
 }

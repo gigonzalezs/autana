@@ -22,17 +22,17 @@ public class ArepoDemoApplicationTests {
 		ProcessComposition<BigInteger, BigInteger> c = new ProcessComposer<BigInteger, BigInteger>()
 				.sequence(seq -> {
 					
-					seq.task(py -> {
+					seq.step(py -> {
 						
 						py.response = py.request
 										.multiply(BigInteger.valueOf(2));
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						py.set("A", BigInteger.valueOf(5));
 						py.set("B", BigInteger.valueOf(2));
 					})
-					.task(py -> {
+					.step(py -> {
 						
 						BigInteger a = (BigInteger) py.vars("A")
 								.orElse(BigInteger.ZERO);
@@ -45,7 +45,7 @@ public class ArepoDemoApplicationTests {
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println(py.response);
 					});
 				})
@@ -54,8 +54,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(2);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(3);
 		
 		ProcessDirector<BigInteger, BigInteger> director = new ProcessDirector<>();
 		
@@ -74,7 +74,7 @@ public class ArepoDemoApplicationTests {
 		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
 				.parallel(pll -> {
 					
-					pll.task(py -> {
+					pll.step(py -> {
 
 						System.out.println("tarea 1");
 						py.response = "1";
@@ -85,7 +85,7 @@ public class ArepoDemoApplicationTests {
 							e.printStackTrace();
 						}
 					})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2");
 						py.response = "2";
@@ -96,7 +96,7 @@ public class ArepoDemoApplicationTests {
 							e.printStackTrace();
 						}
 					})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 3");
 						py.response = "3";
@@ -110,7 +110,7 @@ public class ArepoDemoApplicationTests {
 				})
 				.sequence(seq -> {
 					
-					seq.task(py -> {
+					seq.step(py -> {
 						
 						System.out.println("fin.");
 						System.out.println(py.response);
@@ -122,8 +122,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(2);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(3);
 		
 		ProcessDirector<String, String> director = new ProcessDirector<>();
 		
@@ -143,7 +143,7 @@ public class ArepoDemoApplicationTests {
 		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
 				.sequence(seq -> {
 					
-					seq.task(py -> {
+					seq.step(py -> {
 						
 						System.out.println("tarea 1");
 						try {
@@ -153,7 +153,7 @@ public class ArepoDemoApplicationTests {
 							e.printStackTrace();
 						}
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2");
 						try {
@@ -163,7 +163,7 @@ public class ArepoDemoApplicationTests {
 							e.printStackTrace();
 						}
 					})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 3");
 						try {
@@ -175,7 +175,7 @@ public class ArepoDemoApplicationTests {
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -185,8 +185,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(2);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(3);
 		
 		ProcessDirector<String, String> director = new ProcessDirector<>();
 		
@@ -206,7 +206,7 @@ public class ArepoDemoApplicationTests {
 		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
 				
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						py.set("count", 0);
 						py.set("max", 5);
 					});
@@ -219,7 +219,7 @@ public class ArepoDemoApplicationTests {
 						return count < max;
 					})
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("loop");
 						int count = (int) py.vars("count").get();
@@ -230,7 +230,7 @@ public class ArepoDemoApplicationTests {
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -267,12 +267,12 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("UNO"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-A debe ejecutarse");
 						py.response = "EJECUTADO1";
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-A debe ejecutarse");
 						py.response = py.response + "-EJECUTADO2";
@@ -282,19 +282,19 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("DOS"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 1-B NO debe ejecutarse");
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 2-B NO debe ejecutarse");
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -304,8 +304,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(3);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(2);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(2);
 		
 		ProcessDirector<String, String> director = new ProcessDirector<>();
 		
@@ -330,12 +330,12 @@ public class ArepoDemoApplicationTests {
 					
 					seq.sequence(seq2 -> {
 						
-						seq2.task(py -> {
+						seq2.step(py -> {
 							
 							System.out.println("tarea 1-A debe ejecutarse");
 							py.response = "EJECUTADO1";
 						})
-						.task(py -> {
+						.step(py -> {
 							
 							System.out.println("tarea 2-A debe ejecutarse");
 							py.response = py.response + "-EJECUTADO2";
@@ -343,24 +343,24 @@ public class ArepoDemoApplicationTests {
 					})
 					.sequence(seq2 -> {
 						
-						seq2.task(py -> {
+						seq2.step(py -> {
 							
 							System.out.println("tarea 1-B debe ejecutarse");
 							py.response = py.response + "-EJECUTADO3";
 						})
-						.task(py -> {
+						.step(py -> {
 							
 							System.out.println("tarea 2-B debe ejecutarse");
 							py.response = py.response + "-EJECUTADO4";
 						});
 					})
-					.task(py -> {
+					.step(py -> {
 						System.out.println("tarea 0-A debe ejecutarse");
 						py.response = py.response + "-EJECUTADO5";
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -393,13 +393,13 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("UNO"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-A debe ejecutarse");
 						py.response = "EJECUTADO1";
 						throw new RuntimeException("tarea 1-A ERROR");
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-A debe ejecutarse");
 						py.response = py.response + "-EJECUTADO2";
@@ -409,19 +409,19 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("DOS"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 1-B NO debe ejecutarse");
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 2-B NO debe ejecutarse");
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -431,8 +431,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(3);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(2);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(2);
 		
 		ProcessDirector<String, String> director = new ProcessDirector<>();
 		
@@ -461,13 +461,13 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("UNO"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-A debe ejecutarse");
 						py.response = "EJECUTADO1";
 						throw new RuntimeException("tarea 1-A ERROR");
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-A debe ejecutarse");
 						py.response = py.response + "-EJECUTADO2";
@@ -477,19 +477,19 @@ public class ArepoDemoApplicationTests {
 					
 					con.predicate(py -> py.request.equals("DOS"))
 					
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 1-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 1-B NO debe ejecutarse");
 						})
-					.task(py -> {
+					.step(py -> {
 						
 						System.out.println("tarea 2-B NO debe ejecutarse");
 						throw new RuntimeException("tarea 2-B NO debe ejecutarse");
 					});
 				})
 				.sequence(seq -> {
-					seq.task(py -> {
+					seq.step(py -> {
 						System.out.println("fin.");
 					});
 				})
@@ -499,8 +499,8 @@ public class ArepoDemoApplicationTests {
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(3);
-		assertThat(c.getSequences().get(0).getTasks()).isNotNull();
-		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(2);
+		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
+		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(2);
 		
 		ProcessDirector<String, String> director = new ProcessDirector<>();
 		
