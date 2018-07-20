@@ -57,9 +57,8 @@ public class ProcessDirector<R,T>  {
 				
 			} else {
 				container.getSteps().stream().parallel()
-				.forEach(t -> {
-					executeStep(t,payload);
-				});
+				.map(t -> new AtomicBoolean(executeStep(t,payload)))
+				.allMatch(AtomicBoolean::get);
 			}
 		}
 		return canContinue.get();
