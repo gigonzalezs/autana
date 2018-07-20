@@ -14,8 +14,8 @@ public class ExceptionHandlingTests {
 	public void testExceptionHandlingWhenOnExceptionDeclaration() {
 		
 		System.out.println("--BEGIN testExceptionHandlingWhenOnExceptionDeclaration");
-		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
-				
+		ProcessComposition<String, String> composition = new ProcessComposition<String, String>()
+				.createFromDeclarativeCode()	
 				.sequence(s -> {
 					
 					s.step(payload -> {
@@ -37,7 +37,7 @@ public class ExceptionHandlingTests {
 				.compose();
 		
 		String result = new ProcessDirector<String, String>()
-			.composition(c)
+			.composition(composition)
 			.onException(ex -> {
 				System.out.println("** handling exception...");
 				assertThat(ex.getException().getClass()).isEqualTo(RuntimeException.class);
@@ -55,8 +55,8 @@ public class ExceptionHandlingTests {
 	public void testResumeExecutionAfterExceptionThrown() {
 		
 		System.out.println("--BEGIN testResumeExecutionAfterExceptionThrown");
-		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
-				
+		ProcessComposition<String, String> composition = new ProcessComposition<String, String>()
+				.createFromDeclarativeCode()
 				.sequence(s -> {
 					
 					s.step(payload -> {
@@ -78,7 +78,7 @@ public class ExceptionHandlingTests {
 				.compose();
 		
 		String result = new ProcessDirector<String, String>()
-			.composition(c)
+			.composition(composition)
 			.onException(ex -> {
 				System.out.println("** handling exception...");
 				assertThat(ex.getException().getClass()).isEqualTo(RuntimeException.class);
@@ -98,8 +98,8 @@ public class ExceptionHandlingTests {
 		
 		System.out.println("--BEGIN testExceptionBubbleUpWithoutOnExceptionDeclaration");	
 	
-		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
-				
+		ProcessComposition<String, String> composition = new ProcessComposition<String, String>()
+				.createFromDeclarativeCode()
 				.sequence(s -> {
 					
 					s.step(payload -> {
@@ -120,8 +120,8 @@ public class ExceptionHandlingTests {
 				})
 				.compose();
 		
-		String result = new ProcessDirector<String, String>()
-			.composition(c)
+		new ProcessDirector<String, String>()
+			.composition(composition)
 			.process("ONE");
 			
 		System.out.println("--END testExceptionBubbleUpWithoutOnExceptionDeclaration");		
