@@ -1,5 +1,4 @@
-package org.arepoframework.demo;
-
+package org.autanaframework.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -11,9 +10,7 @@ import org.autanaframework.demo.director.CompositionException;
 import org.autanaframework.demo.director.ProcessDirector;
 import org.junit.Test;
 
-//@RunWith(SpringRunner.class)
-//@SpringBootTest
-public class ArepoDemoApplicationTests {
+public class BasicCompositionTests {
 
 	@Test
 	public void testSecuentialMaths() {
@@ -383,136 +380,4 @@ public class ArepoDemoApplicationTests {
 		System.out.println("--END testNestedSequences");
 		
 	}
-	
-	public void testExceptionHandling() {
-	
-		System.out.println("--BEGIN testCondition");
-		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
-				
-				.yaw(con -> {
-					
-					con.predicate(py -> py.request.equals("UNO"))
-					
-					.step(py -> {
-						
-						System.out.println("tarea 1-A debe ejecutarse");
-						py.response = "EJECUTADO1";
-						throw new RuntimeException("tarea 1-A ERROR");
-						})
-					.step(py -> {
-						
-						System.out.println("tarea 2-A debe ejecutarse");
-						py.response = py.response + "-EJECUTADO2";
-					});
-				})
-				.yaw(con -> {
-					
-					con.predicate(py -> py.request.equals("DOS"))
-					
-					.step(py -> {
-						
-						System.out.println("tarea 1-B NO debe ejecutarse");
-						throw new RuntimeException("tarea 1-B NO debe ejecutarse");
-						})
-					.step(py -> {
-						
-						System.out.println("tarea 2-B NO debe ejecutarse");
-						throw new RuntimeException("tarea 2-B NO debe ejecutarse");
-					});
-				})
-				.sequence(seq -> {
-					seq.step(py -> {
-						System.out.println("fin.");
-					});
-				})
-				.compose();
-		
-	
-		assertThat(c).isNotNull();
-		assertThat(c.getSequences()).isNotNull();
-		assertThat(c.getSequences().size()).isEqualTo(3);
-		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
-		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(2);
-		
-		ProcessDirector<String, String> director = new ProcessDirector<>();
-		
-		
-		String result = director
-			.composition(c)
-			.onException(ex -> {
-				assertThat(ex.getException().getClass()).isEqualTo(RuntimeException.class);
-				assertThat(ex.getException().getMessage()).isEqualTo("tarea 1-A ERROR");
-			})
-			.process("UNO");
-		
-		assertThat(result).isEqualTo("EJECUTADO1-EJECUTADO2");
-		
-		System.out.println("--END testCondition");
-		
 	}
-	
-	@Test(expected = CompositionException.class)
-	public void testExceptionBubbleUp() {
-	
-		System.out.println("--BEGIN testCondition");
-		ProcessComposition<String, String> c = new ProcessComposer<String, String>()
-				
-				.yaw(con -> {
-					
-					con.predicate(py -> py.request.equals("UNO"))
-					
-					.step(py -> {
-						
-						System.out.println("tarea 1-A debe ejecutarse");
-						py.response = "EJECUTADO1";
-						throw new RuntimeException("tarea 1-A ERROR");
-						})
-					.step(py -> {
-						
-						System.out.println("tarea 2-A debe ejecutarse");
-						py.response = py.response + "-EJECUTADO2";
-					});
-				})
-				.yaw(con -> {
-					
-					con.predicate(py -> py.request.equals("DOS"))
-					
-					.step(py -> {
-						
-						System.out.println("tarea 1-B NO debe ejecutarse");
-						throw new RuntimeException("tarea 1-B NO debe ejecutarse");
-						})
-					.step(py -> {
-						
-						System.out.println("tarea 2-B NO debe ejecutarse");
-						throw new RuntimeException("tarea 2-B NO debe ejecutarse");
-					});
-				})
-				.sequence(seq -> {
-					seq.step(py -> {
-						System.out.println("fin.");
-					});
-				})
-				.compose();
-		
-	
-		assertThat(c).isNotNull();
-		assertThat(c.getSequences()).isNotNull();
-		assertThat(c.getSequences().size()).isEqualTo(3);
-		assertThat(c.getSequences().get(0).getSteps()).isNotNull();
-		assertThat(c.getSequences().get(0).getSteps().size()).isEqualTo(2);
-		
-		ProcessDirector<String, String> director = new ProcessDirector<>();
-		
-		
-		String result = director
-			.composition(c)
-			.process("UNO");
-		
-		assertThat(result).isEqualTo("EJECUTADO1-EJECUTADO2");
-		
-		System.out.println("--END testCondition");
-		
-	}
-
-}
