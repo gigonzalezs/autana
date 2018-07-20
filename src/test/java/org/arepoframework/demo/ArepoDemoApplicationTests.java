@@ -14,8 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class ArepoDemoApplicationTests {
 
 	@Test
@@ -53,8 +53,7 @@ public class ArepoDemoApplicationTests {
 					});
 				})
 				.compose();
-		
-	
+			
 		assertThat(c).isNotNull();
 		assertThat(c.getSequences()).isNotNull();
 		assertThat(c.getSequences().size()).isEqualTo(2);
@@ -62,7 +61,6 @@ public class ArepoDemoApplicationTests {
 		assertThat(c.getSequences().get(0).getTasks().size()).isEqualTo(3);
 		
 		ProcessDirector<BigInteger, BigInteger> director = new ProcessDirector<>();
-		
 		
 		BigInteger result = director
 				.composition(c)
@@ -80,7 +78,7 @@ public class ArepoDemoApplicationTests {
 				.parallel(pll -> {
 					
 					pll.task(py -> {
-						
+
 						System.out.println("tarea 1");
 						py.response = "1";
 						try {
@@ -89,7 +87,7 @@ public class ArepoDemoApplicationTests {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						})
+					})
 					.task(py -> {
 						
 						System.out.println("tarea 2");
@@ -141,6 +139,7 @@ public class ArepoDemoApplicationTests {
 		System.out.println("--END testParallel");
 	}
 	
+	@Test
 	public void testSequence() {
 	
 		System.out.println("--BEGIN testSequence");
