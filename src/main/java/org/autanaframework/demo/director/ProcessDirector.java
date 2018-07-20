@@ -1,5 +1,7 @@
 package org.autanaframework.demo.director;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import org.autanaframework.demo.composer.ContainerStep;
 import org.autanaframework.demo.composer.ExceptionHandler;
 import org.autanaframework.demo.composer.ExecutionStep;
@@ -36,47 +38,23 @@ public class ProcessDirector<R,T>  {
 		});
 	}
 	
-	private void executeStep(Step<R,T> step, Payload<R,T> payload) {
+	private boolean executeContainer(ContainerComposition<R, T> container, Payload<R,T> payload) {
 		
-		if (step.getClass().isAssignableFrom(ExecutionStep.class)) {
-			ExecutionStep<R,T> executionStep = (ExecutionStep<R, T>) step;
-			try {
-				executionStep.getStepExecutor().execute(payload);
-			} catch (Throwable t) {
-				handleExecutionException(t);
-			}
-			
-		} else if (step.getClass().isAssignableFrom(ContainerStep.class)) {
-			ContainerStep<R,T> containerStep = (ContainerStep<R, T>) step;
-			ContainerComposition<R,T> subComposition = ContainerComposition.fromContainerComposer(containerStep.getContainer());
-			executeContainer(subComposition, payload);
-		}
-	}
-	
-	private void handleExecutionException(Throwable t) {
-		if (rootExceptionHandlerDeclarator != null) {
-			ExceptionHandler handler = new ExceptionHandler(t);
-			rootExceptionHandlerDeclarator.handle(handler);
-		} else {
-			throw new CompositionException(t);
-		}
-	}
-	
-	private void executeContainer(ContainerComposition<R, T> container, Payload<R,T> payload) {
+		final AtomicBoolean canContinue = new AtomicBoolean(true);
 		
-		if (container.isConditional() == false 
-				||  (container.isConditional() == true 
-					&& container.getPredicate().test(payload) == true)) {
+		if (isContainerExecutable(container, payload)) {
 		
-			if (!container.isParallel()) {
+			if (container.isSerial()) {
+				
 				do {
 					container.getSteps().stream().sequential()
 					.forEach(t -> {
-						executeStep(t,payload);
+						if (canContinue.get()) {
+							canContinue.set(executeStep(t,payload));
+						}
 					});
-				} while (container.isConditional() == true 
-						&& container.isLoopEnabed() == true 
-						&& container.getPredicate().test(payload) == true);
+				} while (canContinue.get() && isContainerStillExecutable(container, payload));
+				
 			} else {
 				container.getSteps().stream().parallel()
 				.forEach(t -> {
@@ -84,6 +62,48 @@ public class ProcessDirector<R,T>  {
 				});
 			}
 		}
+		return canContinue.get();
 	}
-
+	
+	private boolean isContainerExecutable(ContainerComposition<R, T> container, Payload<R,T> payload) {
+		return container.isConditional() == false 
+				||  (container.isConditional() == true 
+				&& container.getPredicate().test(payload) == true);
+	}
+	
+	private boolean isContainerStillExecutable(ContainerComposition<R, T> container, Payload<R,T> payload) {
+		return container.isConditional() == true 
+				&& container.isLoopEnabed() == true 
+				&& container.getPredicate().test(payload) == true;
+	}
+	
+	private boolean executeStep(Step<R,T> step, Payload<R,T> payload) {
+		
+		if (step.getClass().isAssignableFrom(ExecutionStep.class)) {
+			ExecutionStep<R,T> executionStep = (ExecutionStep<R, T>) step;
+			try {
+				executionStep.getStepExecutor().execute(payload);
+				return true;
+			} catch (Throwable t) {
+				return handleExecutionException(t);
+			}
+			
+		} else if (step.getClass().isAssignableFrom(ContainerStep.class)) {
+			ContainerStep<R,T> containerStep = (ContainerStep<R, T>) step;
+			ContainerComposition<R,T> subComposition = ContainerComposition.fromContainerComposer(containerStep.getContainer());
+			return executeContainer(subComposition, payload);
+		} else {
+			return false;
+		}
+	}
+	
+	private boolean handleExecutionException(Throwable t) {
+		if (rootExceptionHandlerDeclarator != null) {
+			ExceptionHandler handler = new ExceptionHandler(t);
+			rootExceptionHandlerDeclarator.handle(handler);
+			return handler.isResumeable();
+		} else {
+			throw new CompositionException(t);
+		}
+	}
 }

@@ -73,6 +73,10 @@ public class ContainerComposition<R,T> {
 		return this.parallel;
 	}
 	
+	public boolean isSerial() {
+		return !this.parallel;
+	}
+	
 	public boolean isConditional() {
 		return this.conditional;
 	}
