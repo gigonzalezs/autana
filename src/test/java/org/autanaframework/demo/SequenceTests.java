@@ -6,8 +6,8 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.autanaframework.demo.composition.ProcessComposition;
-import org.autanaframework.demo.director.ProcessDirector;
+import org.autanaframework.composition.ProcessComposition;
+import org.autanaframework.director.ProcessDirector;
 import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
@@ -55,9 +55,7 @@ public class SequenceTests {
 		ProcessComposition<String, String> composition = new ProcessComposition<String, String>()
 				.createFromDeclarativeCode()
 				.sequence(container -> {
-					
 					container.step(payload -> {
-						
 						System.out.println("step 1");
 						payload.response = "STEP1";
 						try {
@@ -65,9 +63,8 @@ public class SequenceTests {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						})
+					})
 					.step(payload -> {
-						
 						System.out.println("step 2");
 						payload.response += "-STEP2";
 						try {
@@ -77,7 +74,6 @@ public class SequenceTests {
 						}
 					})
 					.step(payload -> {
-						
 						System.out.println("step 3");
 						payload.response += "-STEP3";
 						try {
@@ -93,15 +89,6 @@ public class SequenceTests {
 					});
 				})
 				.compose();
-		
-	
-		assertThat(composition).isNotNull();
-		assertThat(composition.getSequences()).isNotNull();
-		assertThat(composition.getSequences().size()).isEqualTo(2);
-		assertThat(composition.getSequences().get(0).getSteps()).isNotNull();
-		assertThat(composition.getSequences().get(0).getSteps().size()).isEqualTo(3);
-		assertThat(composition.getSequences().get(1).getSteps()).isNotNull();
-		assertThat(composition.getSequences().get(1).getSteps().size()).isEqualTo(1);
 		
 		String result = new ProcessDirector<String, String>()
 			.composition(composition)

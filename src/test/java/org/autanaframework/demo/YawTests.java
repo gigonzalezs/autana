@@ -1,8 +1,9 @@
 package org.autanaframework.demo;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import org.autanaframework.demo.composition.ProcessComposition;
-import org.autanaframework.demo.director.ProcessDirector;
+
+import org.autanaframework.composition.ProcessComposition;
+import org.autanaframework.director.ProcessDirector;
 import org.junit.Test;
 
 public class YawTests {
@@ -50,13 +51,7 @@ public class YawTests {
 					});
 				})
 				.compose();
-		
 	
-		assertThat(composition).isNotNull();
-		assertThat(composition.getSequences()).isNotNull();
-		assertThat(composition.getSequences().size()).isEqualTo(3);
-		assertThat(composition.getSequences().get(0).getSteps()).isNotNull();
-		assertThat(composition.getSequences().get(0).getSteps().size()).isEqualTo(2);
 		
 		String result = new ProcessDirector<String, String>()
 			.composition(composition)

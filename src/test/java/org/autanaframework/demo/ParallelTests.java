@@ -6,15 +6,17 @@ import static org.junit.Assert.assertEquals;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Logger;
 
-import org.autanaframework.demo.composition.ProcessComposition;
-import org.autanaframework.demo.director.ProcessDirector;
+import org.autanaframework.composition.ProcessComposition;
+import org.autanaframework.director.ProcessDirector;
 import org.junit.AssumptionViolatedException;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.Stopwatch;
 import org.junit.runner.Description;
 
+
 public class ParallelTests {
+	
 	
 	private static final Logger logger = Logger.getLogger(ParallelTests.class.getName());
 
@@ -55,9 +57,7 @@ public class ParallelTests {
 		ProcessComposition<String, String> composition = new ProcessComposition<String, String>()
 				.createFromDeclarativeCode()
 				.parallel(container -> {
-					
 					container.step(payload -> {
-						
 						System.out.println("step 1");
 						payload.set("A", "STEP1");
 						try {
@@ -65,9 +65,8 @@ public class ParallelTests {
 						} catch (InterruptedException e) {
 							e.printStackTrace();
 						}
-						})
+					})
 					.step(payload -> {
-						
 						System.out.println("step 2");
 						payload.set("B", "-STEP2");
 						try {
@@ -77,7 +76,6 @@ public class ParallelTests {
 						}
 					})
 					.step(payload -> {
-						
 						System.out.println("step 3");
 						payload.set("C", "-STEP3");
 						try {
@@ -89,22 +87,14 @@ public class ParallelTests {
 				})
 				.sequence(container -> {
 					container.step(payload -> {
-						payload.response = payload.vars("A").get().toString() +
+						payload.response = 
+								payload.vars("A").get().toString() +
 								payload.vars("B").get().toString() +
 								payload.vars("C").get().toString();
 						System.out.println("end.");
 					});
 				})
 				.compose();
-		
-	
-		assertThat(composition).isNotNull();
-		assertThat(composition.getSequences()).isNotNull();
-		assertThat(composition.getSequences().size()).isEqualTo(2);
-		assertThat(composition.getSequences().get(0).getSteps()).isNotNull();
-		assertThat(composition.getSequences().get(0).getSteps().size()).isEqualTo(3);
-		assertThat(composition.getSequences().get(1).getSteps()).isNotNull();
-		assertThat(composition.getSequences().get(1).getSteps().size()).isEqualTo(1);
 		
 		String result = new ProcessDirector<String, String>()
 			.composition(composition)
@@ -118,4 +108,5 @@ public class ParallelTests {
 		System.out.println("--END testParallel");
 		
 	}
+	
 }

@@ -1,15 +1,10 @@
 package org.autanaframework.demo;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.Ignore;
 
-import org.autanaframework.demo.composer.ProcessComposer;
-import org.autanaframework.demo.composition.ProcessComposition;
-import org.autanaframework.demo.director.CompositionException;
-import org.autanaframework.demo.director.ProcessDirector;
-import org.junit.Test;
-
+@Ignore
 public class ExceptionHandlingTests {
-	
+	/*
 	@Test
 	public void testExceptionHandlingWhenOnExceptionDeclaration() {
 		
@@ -126,5 +121,5 @@ public class ExceptionHandlingTests {
 			
 		System.out.println("--END testExceptionBubbleUpWithoutOnExceptionDeclaration");		
 	}
-
+*/
 }
