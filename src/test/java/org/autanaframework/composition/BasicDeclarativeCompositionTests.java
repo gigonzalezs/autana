@@ -1,4 +1,4 @@
-package org.autanaframework.demo;
+package org.autanaframework.composition;
 
 
 import static org.assertj.core.api.Assertions.assertThat;

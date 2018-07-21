@@ -1,7 +1,5 @@
 package org.autanaframework.composer;
 
-import java.util.List;
-
 import org.autanaframework.composition.AbstractComposition;
 import org.autanaframework.composition.ParallelComposition;
 
@@ -16,9 +14,7 @@ public final class ParallelComposer<R, T> extends ContainerComposer<R,T> {
 		
 		ParallelComposition<R,T> composition = new ParallelComposition<>(parentComposition);
 		
-		List<AbstractComposition<R,T>> children = super.composeChildren(composition);
-		
-		composition.getSteps().addAll(children);
+		super.composeChildren(composition);
 		
 		return composition;
 	}

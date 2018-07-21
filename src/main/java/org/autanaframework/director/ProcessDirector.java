@@ -1,5 +1,6 @@
 package org.autanaframework.director;
 
+import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import org.autanaframework.composer.ExceptionHandler;
@@ -9,14 +10,21 @@ import org.autanaframework.composition.ContainerComposition;
 import org.autanaframework.composition.JavaStepComposition;
 import org.autanaframework.composition.ProcessComposition;
 import org.autanaframework.monitor.IExecutionMonitor;
-import org.autanaframework.monitor.NullMonitor;
+import org.autanaframework.monitor.LogMonitor;
+import org.autanaframework.monitor.MonitorCollection;
+import org.autanaframework.monitor.SysOutMonitor;
+import org.autanaframework.monitor.SysOutTraceMonitor;
 
 public class ProcessDirector<R,T>  {
 	
 	private ProcessComposition<R,T> current_composition;
 	private ExceptionHandlerDeclarator rootExceptionHandlerDeclarator;
-	private IExecutionMonitor<R,T> monitor = new NullMonitor<R,T>();
+	private MonitorCollection<R,T> monitor = new MonitorCollection<R,T>();
 	
+	public List<IExecutionMonitor<R,T>> getMonitors() {
+		return monitor.getMonitors();
+	}
+
 	public ProcessDirector<R,T> composition(ProcessComposition<R,T> composition) {
 		current_composition = composition;
 		return this;
@@ -27,10 +35,31 @@ public class ProcessDirector<R,T>  {
 		return this;
     }
 	
-	public ProcessDirector<R,T> monitor(IExecutionMonitor<R,T> monitor) {
-		this.monitor = monitor;
+	public ProcessDirector<R,T> addCustomMonitor(IExecutionMonitor<R,T> monitor) {
+		this.monitor.getMonitors().add(monitor);
 		return this;
     }
+	
+	public ProcessDirector<R,T> addLogMonitor() {
+		this.addCustomMonitor(new LogMonitor<R,T>());
+		return this;
+    }
+	
+	public ProcessDirector<R,T> addSysOutMonitor() {
+		this.addCustomMonitor(new SysOutMonitor<R,T>());
+		return this;
+    }
+	 
+	public ProcessDirector<R,T> addSysOutOnlyPathsMonitor() {
+		this.addCustomMonitor(new SysOutMonitor<R,T>().disablePayLoad());
+		return this;
+    }
+	
+	public ProcessDirector<R,T> addSysOutTraceMonitor() {
+		this.addCustomMonitor(new SysOutTraceMonitor<R,T>());
+		return this;
+    }
+	
 	
 	public T process(R request) {
 		Payload<R,T> payload = new Payload<>(request);
@@ -39,17 +68,21 @@ public class ProcessDirector<R,T>  {
 	}
 	
 	public void process(Payload<R,T> payload) {
-		monitor.executing("/", payload);
+		final AtomicBoolean canContinue = new AtomicBoolean(true);
+		monitor.start(payload);
 		current_composition.getChildren().stream()
 		.forEach(container -> {
-			executeContainer((ContainerComposition<R, T>)container, payload);
+			if (canContinue.get()) {
+				canContinue.set(
+						executeContainer((ContainerComposition<R, T>)container, payload));
+			}
 		});
-		monitor.success("/", payload);
+		monitor.end(payload);
 	}
 	
 	private boolean executeContainer(ContainerComposition<R, T> container, Payload<R,T> payload) {
 		
-		monitor.executing("/", payload);
+		monitor.executing(container.getNodeName(), payload);
 		final AtomicBoolean canContinue = new AtomicBoolean(true);
 		
 		if (isContainerExecutable(container, payload)) {
@@ -71,7 +104,7 @@ public class ProcessDirector<R,T>  {
 				.allMatch(AtomicBoolean::get);
 			}
 		}
-		monitor.success("/", payload);
+		monitor.success(container.getNodeName(), payload);
 		return canContinue.get();
 	}
 	
@@ -92,13 +125,15 @@ public class ProcessDirector<R,T>  {
 		if (JavaStepComposition.class.isAssignableFrom(step.getClass())) {
 			JavaStepComposition<R,T> executionStep = (JavaStepComposition<R, T>) step;
 			try {
-				monitor.executing("/", payload);
+				monitor.executing(executionStep.getNodeName(), payload);
 				executionStep.getSnippetFunction().execute(payload);
-				monitor.success("/", payload);
+				monitor.success(executionStep.getNodeName(), payload);
 				return true;
+			} catch (DebuggerInterruptionException dbgEx) {
+				return false;
 			} catch (Throwable t) {
 				boolean resumeable = handleExecutionException(t);
-				monitor.fail("/", payload, resumeable);
+				monitor.fail(executionStep.getNodeName(), payload, resumeable);
 				return resumeable;
 			}
 			

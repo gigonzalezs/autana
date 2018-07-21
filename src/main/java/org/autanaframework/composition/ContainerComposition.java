@@ -32,7 +32,8 @@ public abstract class ContainerComposition<R,T> extends AbstractComposition<R,T>
 		this.loopEnabled = false;
 	}
 	
-	public ContainerComposition(AbstractComposition<R,T> parentComposition, boolean loopEnabled, Predicate<Payload<R,T>> condition) {
+	public ContainerComposition(AbstractComposition<R,T> parentComposition, boolean loopEnabled, 
+			Predicate<Payload<R,T>> condition) {
 		super(parentComposition);
 		this.parallel = false;
 		this.steps = new ArrayList<>();

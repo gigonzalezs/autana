@@ -1,4 +1,4 @@
-package org.autanaframework.demo;
+package org.autanaframework.exceptions;
 
 import org.junit.Ignore;
 

@@ -1,4 +1,4 @@
-package org.autanaframework.demo;
+package org.autanaframework.director;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -58,6 +58,7 @@ public class SequenceTests {
 					container.step(payload -> {
 						System.out.println("step 1");
 						payload.response = "STEP1";
+						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
@@ -67,6 +68,7 @@ public class SequenceTests {
 					.step(payload -> {
 						System.out.println("step 2");
 						payload.response += "-STEP2";
+						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {
@@ -76,6 +78,7 @@ public class SequenceTests {
 					.step(payload -> {
 						System.out.println("step 3");
 						payload.response += "-STEP3";
+						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
 						} catch (InterruptedException e) {

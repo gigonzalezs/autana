@@ -1,7 +1,5 @@
 package org.autanaframework.composer;
 
-import java.util.List;
-
 import org.autanaframework.composition.AbstractComposition;
 import org.autanaframework.composition.SequenceComposition;
 
@@ -16,9 +14,7 @@ public final class SequenceComposer<R,T> extends ContainerComposer<R,T> {
 		
 		SequenceComposition<R,T> composition = new SequenceComposition<>(parentComposition);
 		
-		List<AbstractComposition<R,T>> children = super.composeChildren(composition);
-		
-		composition.getSteps().addAll(children);
+		super.composeChildren(composition);
 		
 		return composition;
 	}	

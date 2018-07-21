@@ -2,14 +2,13 @@ package org.autanaframework.composer;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
-
 import org.autanaframework.composer.declarative.declarators.JavaSnippetDeclarator;
 import org.autanaframework.composer.declarative.declarators.LoopDeclarator;
 import org.autanaframework.composer.declarative.declarators.ParallelDeclarator;
 import org.autanaframework.composer.declarative.declarators.SequenceDeclarator;
 import org.autanaframework.composer.declarative.declarators.YawDeclarator;
 import org.autanaframework.composition.AbstractComposition;
+import org.autanaframework.composition.ContainerComposition;
 
 public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T> 
 	implements IContainerComposer<R, T> {
@@ -31,11 +30,13 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 			return steps;
 	}
 	
-	protected List<AbstractComposition<R,T>> composeChildren(AbstractComposition<R, T> parentComposition) {
-		
-		return steps.stream()
+	protected void composeChildren(AbstractComposition<R, T> parentComposition) {
+		ContainerComposition<R,T> container = (ContainerComposition<R, T>) parentComposition;
+		steps.stream()
 		.map(composer -> composer.compose(parentComposition))
-		.collect(Collectors.toList());
+		.forEach(composition -> {
+			container.getSteps().add(composition);
+		});
 		
 	}
 
