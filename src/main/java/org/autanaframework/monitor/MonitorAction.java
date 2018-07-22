@@ -1,6 +1,6 @@
 package org.autanaframework.monitor;
 
-enum MonitorAction {
+public enum MonitorAction {
 	START,
 	EXECUTING,
 	SUCCESS,

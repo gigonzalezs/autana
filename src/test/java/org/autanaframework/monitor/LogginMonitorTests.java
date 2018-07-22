@@ -4,7 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import org.autanaframework.composition.ProcessComposition;
 import org.autanaframework.director.ProcessDirector;
-import org.autanaframework.monitor.SysOutDebuggerMonitor;
+import org.autanaframework.recovery.SysOutDebuggerInterrupterMonitor;
 import org.junit.Test;
 
 public class LogginMonitorTests {
@@ -49,9 +49,9 @@ public class LogginMonitorTests {
 		assertThat(composition.getChildren()).isNotNull();
 		assertThat(composition.getChildren().size()).isEqualTo(2);
 		
-		SysOutDebuggerMonitor<String, String>  debugger = new SysOutDebuggerMonitor<>();
+		SysOutTraceMonitor<String, String>  debugger = new SysOutTraceMonitor<>();
 		//debugger.interactive();
-		debugger.getBreakpoints().add("//sequence1/sequence1/javastep2");
+		//debugger.getBreakpoints().add("//sequence1/sequence1/javastep2");
 		
 		
 		String result = new ProcessDirector<String, String>()

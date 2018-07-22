@@ -7,6 +7,7 @@ public class AbstractComposition<R, T> {
 	private static final String EMPTY= "";
 	private final AbstractComposition<R,T> parentComposition;
 	private final String nodeName;
+	AbstractComposition<R, T> nextNode;
 	
 	protected AbstractComposition (AbstractComposition<R,T> parentComposition) {
 		this.parentComposition = parentComposition;
@@ -36,5 +37,19 @@ public class AbstractComposition<R, T> {
 			}
 		}
 		return 0;
+	}
+
+	public AbstractComposition<R, T> getNextNode() {
+		return this.nextNode != null ? nextNode 
+				: (parentComposition != null ? parentComposition.getNextNode() : null);
+	}
+
+	public void setNextNode(AbstractComposition<R, T> nextNode) {
+		this.nextNode = nextNode;
+	}
+	
+	@Override
+	public String toString() {
+		return this.getNodeName();
 	}
 }

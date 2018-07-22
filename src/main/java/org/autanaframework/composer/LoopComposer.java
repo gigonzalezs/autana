@@ -8,14 +8,9 @@ public final class LoopComposer<R, T> extends ConditionedComposer<R,T> {
 	public LoopComposer (AbstractComposer<R,T> parentComposer) {
 		super(parentComposer);
 	}
-
+	
 	@Override
-	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
-		
-		LoopComposition<R,T> composition = new LoopComposition<>(parentComposition, this.getPredicate());
-		
-		super.composeChildren(composition);
-		
-		return composition;
+	protected AbstractComposition<R, T> buildComposition(AbstractComposition<R, T> parentComposition) {
+		return new LoopComposition<>(parentComposition, this.getPredicate());
 	}	
 }

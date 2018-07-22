@@ -10,12 +10,7 @@ public final class SequenceComposer<R,T> extends ContainerComposer<R,T> {
 	}
 	
 	@Override
-	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
-		
-		SequenceComposition<R,T> composition = new SequenceComposition<>(parentComposition);
-		
-		super.composeChildren(composition);
-		
-		return composition;
-	}	
+	protected AbstractComposition<R, T> buildComposition(AbstractComposition<R, T> parentComposition) {
+		return new SequenceComposition<>(parentComposition);
+	}
 }

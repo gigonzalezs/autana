@@ -10,12 +10,7 @@ public final class ParallelComposer<R, T> extends ContainerComposer<R,T> {
 	}
 
 	@Override
-	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
-		
-		ParallelComposition<R,T> composition = new ParallelComposition<>(parentComposition);
-		
-		super.composeChildren(composition);
-		
-		return composition;
+	protected AbstractComposition<R, T> buildComposition(AbstractComposition<R, T> parentComposition) {
+		return new ParallelComposition<>(parentComposition);
 	}
 }

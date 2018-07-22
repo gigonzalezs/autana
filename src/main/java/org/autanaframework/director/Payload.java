@@ -6,11 +6,14 @@ import java.util.Optional;
 
 public class Payload<R, T> {
 	
-	public final R request;
+	public R request;
 	
 	public T response;
 	
 	private Map<String, Object> payload_vars = new HashMap<>();
+	
+	public Payload() {
+	}
 	
 	public Payload(R request, T response) {
 		this.request=request;

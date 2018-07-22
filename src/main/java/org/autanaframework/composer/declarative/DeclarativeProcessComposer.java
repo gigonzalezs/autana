@@ -1,7 +1,10 @@
 package org.autanaframework.composer.declarative;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
 import org.autanaframework.composer.AbstractComposer;
 import org.autanaframework.composer.ContainerComposer;
 import org.autanaframework.composer.LoopComposer;
@@ -32,13 +35,20 @@ public class DeclarativeProcessComposer<R,T> extends AbstractComposer<R,T>  {
 	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
 		
 		ProcessComposition<R, T> processComposition = new ProcessComposition<R,T>();
+		final Queue<AbstractComposition<R, T>> lastNodes = new LinkedList<>();
 		
 		containerComposers.stream()
 			.forEach(composer -> {
 				AbstractComposition<R,T> composition = composer.compose(processComposition);
-				processComposition.getChildren().add(composition);
+				processComposition.getChildren().add(composition); 
+				if (lastNodes.peek() != null) {
+					AbstractComposition<R, T> lastNode = lastNodes.poll();
+					lastNode.setNextNode(composition);
+				}
+				lastNodes.add(composition);
 			});
 		
+		lastNodes.clear();
 		return processComposition;
 	}
 	

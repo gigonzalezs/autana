@@ -1,7 +1,10 @@
 package org.autanaframework.composer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
+
 import org.autanaframework.composer.declarative.declarators.JavaSnippetDeclarator;
 import org.autanaframework.composer.declarative.declarators.LoopDeclarator;
 import org.autanaframework.composer.declarative.declarators.ParallelDeclarator;
@@ -30,14 +33,31 @@ public abstract class ContainerComposer<R,T> extends AbstractComposer<R,T>
 			return steps;
 	}
 	
-	protected void composeChildren(AbstractComposition<R, T> parentComposition) {
+	@Override
+	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
+		
+		AbstractComposition<R, T> composition = buildComposition(parentComposition);
+		composeChildren(composition);
+		return composition;
+	}
+	
+	protected abstract AbstractComposition<R, T> buildComposition(AbstractComposition<R, T> parentComposition);
+	
+	private void composeChildren(AbstractComposition<R, T> parentComposition) {
+		
 		ContainerComposition<R,T> container = (ContainerComposition<R, T>) parentComposition;
+		final Queue<AbstractComposition<R, T>> lastNodes = new LinkedList<>();
 		steps.stream()
 		.map(composer -> composer.compose(parentComposition))
 		.forEach(composition -> {
 			container.getSteps().add(composition);
+			if (lastNodes.peek() != null) {
+				AbstractComposition<R, T> lastNode = lastNodes.poll();
+				lastNode.setNextNode(composition);
+			}
+			lastNodes.add(composition);
 		});
-		
+		lastNodes.clear();
 	}
 
 	public ContainerComposer<R,T> sequence(SequenceDeclarator<R,T> sequenceFunction) {

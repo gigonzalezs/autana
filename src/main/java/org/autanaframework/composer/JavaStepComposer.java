@@ -31,11 +31,4 @@ public final class JavaStepComposer<R,T> extends AbstractComposer<R,T>  {
 		parentContainer.getSteps().add(step);
 		return step;
 	}
-
-	/*
-	public JavaStepComposer<R,T> step(StepDeclarator<R,T> stepDeclaratorFunction) {
-		stepLinker.getSteps().add(new ExecutionStep<R,T>(stepDeclaratorFunction));
-		return new StepComposer<R, T>(super.getComposer(), stepLinker);
-	}
-	*/
 }

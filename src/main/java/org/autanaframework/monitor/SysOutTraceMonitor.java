@@ -48,6 +48,10 @@ public class SysOutTraceMonitor<R,T> implements IExecutionMonitor<R,T> {
 			current_identation += 3;
 		} else if (action == MonitorAction.FAIL || action == MonitorAction.SUCCESS) {
 			current_identation -=3;
+			if (current_identation <0) {
+				//System.out.println("WARNING: negative identation in monitor.");
+				current_identation = 0;
+			}
 		}
 		return new String(new char[current_identation]).replace("\0", "-");
 	}

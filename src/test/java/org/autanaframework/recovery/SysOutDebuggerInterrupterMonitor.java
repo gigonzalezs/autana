@@ -1,59 +1,64 @@
-package org.autanaframework.monitor;
+package org.autanaframework.recovery;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Scanner;
 
 import org.autanaframework.director.DebuggerInterruptionException;
 import org.autanaframework.director.Payload;
+import org.autanaframework.monitor.IExecutionMonitor;
+import org.autanaframework.monitor.MonitorAction;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-public class SysOutDebuggerMonitor<R,T> implements IExecutionMonitor<R,T> {
+public class SysOutDebuggerInterrupterMonitor<R,T> implements IExecutionMonitor<R,T> {
 
 	private static final ObjectMapper mapper = new ObjectMapper();
 	private int current_identation= 0;
 	private final List<String> breakpoints = new ArrayList<>();
-	Scanner keyboard = new Scanner(System.in);
-	private boolean interactionEnabled = false;
+	private Payload<R, T> lastPayload;
 	
+	public String getLastPayload() {
+		return getPayloadAsJson(lastPayload);
+	}
+
 	public List<String> getBreakpoints() {
 		return breakpoints;
-	}
-	
-	public SysOutDebuggerMonitor<R,T> interactive() {
-		this.interactionEnabled = true;
-		return this;
 	}
 
 	@Override
 	public void start(Payload<R, T> payload) {
+		lastPayload = payload;
 		log(MonitorAction.START, null, payload, false);
 	}
 
 	@Override
 	public void executing(String path, Payload<R, T> payload) {
+		lastPayload = payload;
 		log(MonitorAction.EXECUTING , path, payload, false);
 		if (breakpoints.contains(path)) {
 			System.out.println("\r\r>>>> BreakPoint reached at: " + path);
-			System.out.println("\r>>> payload: " + getPayloadAsJson(payload));
+			System.out.println("\r>>>> payload: " + getPayloadAsJson(payload));
 			pause();
 		}
 	}
 
 	@Override
 	public void success(String path, Payload<R, T> payload) {
+		lastPayload = payload;
 		log(MonitorAction.SUCCESS, path, payload, false);
 	}
 
 	@Override
 	public void fail(String path, Payload<R, T> payload, boolean resumeable) {
+		lastPayload = payload;
 		log(MonitorAction.FAIL, path, payload, resumeable);
 	}
 
 	@Override
 	public void end(Payload<R, T> payload) {
+		lastPayload = payload;
 		log(MonitorAction.END, null, payload, false);
 	}
 	
@@ -88,26 +93,8 @@ public class SysOutDebuggerMonitor<R,T> implements IExecutionMonitor<R,T> {
 	}
 	
 	private void pause() {
-		System.out.print("\r\rcontinue? {Y/n} > ");
-		if (!this.interactionEnabled) {
-			
-			System.out.println("user interaction simulation 5000ms...");
-			try {
-				Thread.sleep(5000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			System.out.println("Y");
-		}
-		else {
-			
-			String res = keyboard.nextLine();
-			System.out.print("\r\r");
-			
-			if (res.toLowerCase().trim().equals("n")) {
-				throw new DebuggerInterruptionException();
-			}
-		}
+		System.out.println("\r\r>>>> Sending terminate process execution signal...\r\n");
+		throw new DebuggerInterruptionException();			
 	}
 
 }
