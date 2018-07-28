@@ -22,13 +22,21 @@ public class DeclarativeProcessComposer<R,T> extends AbstractComposer<R,T>  {
 	}
 	
 	public ProcessComposition<R,T> compose() {
-		return (ProcessComposition<R, T>) this.compose(null);
+		return (ProcessComposition<R, T>) this.compose(null, new ProcessComposition<R,T>());
 	}
-
+	
+	public ProcessComposition<R,T> composeOverProcess(ProcessComposition<R, T> processComposition) {
+		return (ProcessComposition<R, T>) this.compose(null, processComposition);
+	}
+	
 	@Override
 	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition) {
+		return compose(parentComposition, new ProcessComposition<R,T>());
+	}
+
+	
+	public AbstractComposition<R, T> compose(AbstractComposition<R, T> parentComposition, ProcessComposition<R, T> processComposition) {
 		
-		ProcessComposition<R, T> processComposition = new ProcessComposition<R,T>();
 		final Queue<AbstractComposition<R, T>> lastNodes = new LinkedList<>();
 		
 		containerComposers.stream()

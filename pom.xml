@@ -11,6 +11,15 @@
 	<name>autana framework</name>
 	<description>Autana is a declarative framework for Java that allows the implementation of complex business processes with the ability to recover from execution interruptions</description>
 
+	<developers>
+		<developer>
+	      <id>gb</id>
+	      <name>Gilbert Gonzalez</name>
+	      <email>gb@yamia.io</email>
+	      <organization>Yamia.io</organization>
+    	</developer>
+	</developers>
+	
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -103,6 +112,11 @@
 			<groupId>com.fasterxml.jackson.core</groupId>
 			<artifactId>jackson-databind</artifactId>
 			<version>2.8.11.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.hibernate.javax.persistence</groupId>
+			<artifactId>hibernate-jpa-2.1-api</artifactId>
+			<version>1.0.0.Final</version>
 		</dependency>
 	</dependencies>
 
