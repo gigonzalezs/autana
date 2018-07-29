@@ -1,3 +1,5 @@
+![build status] (https://img.shields.io/bitbucket/pipelines/yamia/autana.svg)
+
 # Welcome to autana 
 ## The Business Process automation framework using functional / declarative programming paradigm.
 
