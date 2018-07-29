@@ -1,13 +1,11 @@
 package io.yamia.autana.monitor;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.yamia.autana.director.Payload;
 
 public class SysOutMonitor<R,T> implements IExecutionMonitor<R,T> {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
 	private boolean payLoadPrinting = true;
 	
 	public SysOutMonitor<R,T> disablePayLoad() {
@@ -42,11 +40,12 @@ public class SysOutMonitor<R,T> implements IExecutionMonitor<R,T> {
 	
 	private void log(String label, String path, Payload<R,T> payload, boolean resumeable) {
 		try {
-			System.out.println( ">> " +
+			System.out.println( "\r>> " +
 					label + ": "+
 					(resumeable? "(resumeable) " : "") +
 					(path != null ? path : "") +
-					(payLoadPrinting? "\rpayload: " + mapper.writeValueAsString(payload) : ""));
+					(payLoadPrinting? "\r\t\tpayload: " + payload.toJSONString() : ""));
+					//(payLoadPrinting? "\r\t\tpayload: " + mapper.writeValueAsString(payload) : ""));
 		} catch (JsonProcessingException e) {
 			System.out.println(">> WARNING: unable to serialize payload as json: " + e.getMessage());
 			System.out.println(">> " + label + ": " + path + "\rpayload: {unable to serialize payload as json}");

@@ -3,14 +3,12 @@ package io.yamia.autana.monitor;
 import java.util.logging.Logger;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.yamia.autana.director.Payload;
 
 public class LogMonitor<R,T> implements IExecutionMonitor<R,T> {
 
 	private static final Logger LOG = Logger.getLogger(LogMonitor.class.getName());
-	private static final ObjectMapper mapper = new ObjectMapper();
 
 	@Override
 	public void executing(String path, Payload<R,T> payload) {
@@ -42,7 +40,7 @@ public class LogMonitor<R,T> implements IExecutionMonitor<R,T> {
 			LOG.info(label + ": "+
 					(resumeable? "(resumeable) " : "") +
 					(path != null ? path : "") +
-					"\rpayload: " + mapper.writeValueAsString(payload));
+					"\rpayload: " + payload.toJSONString());
 		} catch (JsonProcessingException e) {
 			LOG.warning("unable to serialize payload as json: " + e.getMessage());
 			LOG.info(label + ": " + path + "\rpayload: {unable to serialize payload as json}");

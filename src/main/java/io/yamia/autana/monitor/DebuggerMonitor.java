@@ -7,14 +7,12 @@ import java.util.Scanner;
 import java.util.function.Predicate;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.yamia.autana.director.Payload;
 import io.yamia.autana.director.exceptions.DebuggerInterruptionException;
 
 public class DebuggerMonitor<R,T> implements IExecutionMonitor<R,T> {
 
-	private static final ObjectMapper mapper = new ObjectMapper();
 	private final List<BreakPoint<R,T>> breakpoints = new ArrayList<>();
 	Scanner keyboard = new Scanner(System.in);
 	private boolean interactionEnabled = false;
@@ -92,7 +90,7 @@ public class DebuggerMonitor<R,T> implements IExecutionMonitor<R,T> {
 	
 	private String getPayloadAsJson(Payload<R,T> payload) {
 		try {
-			return mapper.writeValueAsString(payload);
+			return payload.toJSONString();
 		} catch (JsonProcessingException e) {
 			return "{unable to serialize payload as json}";
 		}

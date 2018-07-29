@@ -1,7 +1,6 @@
 package io.yamia.autana.director;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -91,7 +90,9 @@ public class ProcessDirector<R,T>  {
 		do {
 			ExecutionResult<R,T> r = executeStep(composition, payload);
 			canContinue.set(r.canContinue());
-			notifyBranchClosing(composition, r.getNextNode(), payload);
+			if (canContinue.get()) {
+				notifyBranchClosing(composition, r.getNextNode(), payload);
+				}
 			composition = parentIsLoopAndStillExecuting(composition, payload) == false ?
 					r.getNextNode()
 					: composition.getParent();
@@ -120,15 +121,8 @@ public class ProcessDirector<R,T>  {
 	private void notifyBranchClosing(AbstractComposition<R, T> current, 
 			AbstractComposition<R, T> next, Payload<R,T> payload) {
 		
-		if (next !=null && current != null
-				&& ContainerComposition.class.isAssignableFrom(next.getClass()) 
-				&& JavaStepComposition.class.isAssignableFrom(current.getClass())) {
-			
-			monitor.success(current.getNodeName(), payload);
-		}	
-		
 		if (isLastNodeInBranch(current)) {
-			monitor.success(current.getNodeName(), payload);
+			monitor.success(current.getParent().getNodeName(), payload);
 		}
 	}
 	

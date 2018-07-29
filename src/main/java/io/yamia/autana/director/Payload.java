@@ -7,12 +7,18 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 public class Payload<R, T> {
+	
+	private static final ObjectMapper mapper = new ObjectMapper();
 	
 	public R request;
 	
@@ -36,6 +42,30 @@ public class Payload<R, T> {
 		return this.payload_vars.containsKey(varName) ?
 				this.payload_vars.get(varName)
 				: Variable.emptyVariable(varName, payload_vars);
+	}
+	
+	public String toJSONString() throws JsonProcessingException {
+		StringBuilder sb = new StringBuilder();
+		sb.append("{");
+		sb.append("\"request\": " + mapper.writeValueAsString(this.request) + ", ");
+		sb.append("\"response\": " + mapper.writeValueAsString(this.response) + ", ");
+		if (!this.payload_vars.isEmpty()) {
+			sb.append("\"variables\": {");
+			final AtomicBoolean firstElement = new AtomicBoolean(true);
+			this.payload_vars.entrySet().stream().forEach(entry -> {
+				sb.append(firstElement.get()? "": ", ");
+				sb.append("\"" + entry.getKey() + "\": ");
+				try {
+					sb.append(mapper.writeValueAsString(entry.getValue().get()));
+				} catch (JsonProcessingException e) {
+					sb.append("\"#ERROR:" + e.getMessage() + "\"");
+				}
+				firstElement.set(false);
+			});
+			sb.append("}");
+		}
+		sb.append("}");
+		return sb.toString();
 	}
 	
 	public static class Variable<X> {
