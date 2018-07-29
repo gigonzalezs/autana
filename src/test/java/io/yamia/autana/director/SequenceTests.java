@@ -100,7 +100,7 @@ public class SequenceTests {
 		
 		assertThat(result).isEqualTo("STEP1-STEP2-STEP3");
 		
-		long delta = 500;
+		long delta = 1000;
 	    assertEquals(6000d, stopwatch.runtime(TimeUnit.MILLISECONDS), delta);
 		
 		System.out.println("--END testSequence");
