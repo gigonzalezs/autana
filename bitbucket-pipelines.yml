@@ -1,0 +1,8 @@
+image: maven:3.2.5-jdk-8
+
+pipelines:
+  branches:
+    master:
+      - step:
+          script:
+            - mvn -B verify
