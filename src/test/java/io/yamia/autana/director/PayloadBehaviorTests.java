@@ -24,14 +24,15 @@ public class PayloadBehaviorTests {
 										.multiply(BigInteger.valueOf(2));
 						})
 					.step(payload -> {
-						payload.set("A", BigInteger.valueOf(5));
-						payload.set("B", BigInteger.valueOf(2));
+						
+						payload.var("A").setBigInteger(BigInteger.valueOf(5));
+						payload.var("B").setBigInteger(BigInteger.valueOf(2));
 					})
 					.step(payload -> {
-						BigInteger a = (BigInteger) payload.vars("A")
-								.orElse(BigInteger.ZERO);
-						BigInteger b = (BigInteger) payload.vars("B")
-								.orElse(BigInteger.ZERO);
+						BigInteger a = payload.var("A").getBigInteger();
+								//.orElse(BigInteger.ZERO);
+						BigInteger b = payload.var("B").getBigInteger();
+								//.orElse(BigInteger.ZERO);
 						payload.response = payload.response
 								.add(a)
 								.add(b);

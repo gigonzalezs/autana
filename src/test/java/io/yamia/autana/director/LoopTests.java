@@ -19,25 +19,25 @@ public class LoopTests {
 				
 				.sequence(container -> {
 					container.step(payload -> {
-						payload.set("count", 0);
-						payload.set("max", 5);
+						payload.var("count").setInteger(0);
+						payload.var("max").setInteger(5);
 					});
 				})
 				.loop(container -> {
 					
 					container.predicate(payload -> {
-						int count = (int) payload.vars("count").get();
-						int max = (int) payload.vars("max").get();
+						int count = payload.var("count").getInteger();
+						int max = payload.var("max").getInteger();
 						return count < max;
 					})
 					
 					.step(payload -> {
 						
 						System.out.println("loop");
-						int count = (int) payload.vars("count").get();
+						int count = payload.var("count").getInteger();
 						System.out.println(count);
 						count++;
-						payload.set("count", count);
+						payload.var("count").setInteger(count);
 						payload.response = String.valueOf(count);
 					});
 				})

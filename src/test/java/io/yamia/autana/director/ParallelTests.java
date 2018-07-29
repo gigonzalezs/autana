@@ -60,7 +60,7 @@ public class ParallelTests {
 				.parallel(container -> {
 					container.step(payload -> {
 						System.out.println("step 1");
-						payload.set("A", "STEP1");
+						payload.var("A").setString("STEP1");
 						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
@@ -70,7 +70,7 @@ public class ParallelTests {
 					})
 					.step(payload -> {
 						System.out.println("step 2");
-						payload.set("B", "-STEP2");
+						payload.var("B").setString("-STEP2");
 						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
@@ -80,7 +80,7 @@ public class ParallelTests {
 					})
 					.step(payload -> {
 						System.out.println("step 3");
-						payload.set("C", "-STEP3");
+						payload.var("C").setString("-STEP3");
 						System.out.println("work simulation 2000ms...");
 						try {
 							Thread.sleep(2000);
@@ -92,9 +92,9 @@ public class ParallelTests {
 				.sequence(container -> {
 					container.step(payload -> {
 						payload.response = 
-								payload.vars("A").get().toString() +
-								payload.vars("B").get().toString() +
-								payload.vars("C").get().toString();
+								payload.var("A").getString() +
+								payload.var("B").getString() +
+								payload.var("C").getString();
 						System.out.println("end.");
 					});
 				})

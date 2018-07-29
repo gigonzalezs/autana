@@ -1,9 +1,9 @@
 package io.yamia.autana.samples.monitors;
 
 import io.yamia.autana.director.exceptions.DebuggerInterruptionException;
-import io.yamia.autana.monitor.SysOutDebuggerMonitor;
+import io.yamia.autana.monitor.DebuggerMonitor;
 
-public class SysOutDebuggerInterrupterMonitor<R,T> extends SysOutDebuggerMonitor<R,T> {
+public class StopOnBreakpointDebuggerMonitor<R,T> extends DebuggerMonitor<R,T> {
 	
 	@Override
 	protected void pause() {

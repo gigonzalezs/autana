@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import io.yamia.autana.director.ProcessDirector;
-import io.yamia.autana.samples.monitors.SysOutDebuggerInterrupterMonitor;
+import io.yamia.autana.samples.monitors.StopOnBreakpointDebuggerMonitor;
 
 @Configuration
 public class AutanaConfig {
@@ -15,7 +15,7 @@ public class AutanaConfig {
 	}
 	
 	@Bean
-	public SysOutDebuggerInterrupterMonitor<Integer,Integer> getDebugger() {
-		return new SysOutDebuggerInterrupterMonitor<Integer, Integer>();
+	public StopOnBreakpointDebuggerMonitor<Integer,Integer> getDebugger() {
+		return new StopOnBreakpointDebuggerMonitor<Integer, Integer>();
 	}
 }

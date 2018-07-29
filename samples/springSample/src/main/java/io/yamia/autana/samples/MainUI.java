@@ -17,7 +17,7 @@ import com.vaadin.ui.VerticalLayout;
 
 import io.yamia.autana.director.ProcessDirector;
 import io.yamia.autana.samples.monitors.PersistenceMonitor;
-import io.yamia.autana.samples.monitors.SysOutDebuggerInterrupterMonitor;
+import io.yamia.autana.samples.monitors.StopOnBreakpointDebuggerMonitor;
 import io.yamia.autana.samples.monitors.UIProcessMonitor;
 
 @SpringUI
@@ -26,13 +26,13 @@ public class MainUI extends UI {
 	private static final long serialVersionUID = 4655472711457407911L;
 
 	@Autowired
-	private FibonacciSequence fibonacci;
+	private FibonacciSequenceComposition fibonacci;
 	
 	@Autowired
 	private ProcessDirector<Integer, Integer> director;
 	
 	@Autowired
-	private SysOutDebuggerInterrupterMonitor<Integer, Integer> debugger;
+	private StopOnBreakpointDebuggerMonitor<Integer, Integer> debugger;
 	
 	@Autowired
 	private UIProcessMonitor monitor;
@@ -54,7 +54,7 @@ public class MainUI extends UI {
 		
 		debugger
 		.addBreakPoint("//loop2/javastep3", payload -> {
-			Integer i = (Integer) payload.vars("i").get();
+			Integer i = (Integer) payload.var("i").get();
 			return i == slider.getValue().intValue();
 		});
 		
