@@ -8,6 +8,8 @@
 
 Autana is a declarative framework for Java that allows the implementation of complex business processes with the ability to recover from execution interruptions
 
+more info at [autana project site](http://www.yamia.io/autana/)
+
 ## Main Components
 
 ### Compositions
