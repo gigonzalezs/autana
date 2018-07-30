@@ -1,12 +1,16 @@
 package io.yamia.autana.samples.monitors;
 
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.spring.annotation.UIScope;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Label;
 import com.vaadin.ui.VerticalLayout;
 
 import io.yamia.autana.director.Payload;
 import io.yamia.autana.monitor.IExecutionMonitor;
+import io.yamia.autana.samples.TraceUI;
 
 @SpringComponent
 @UIScope
@@ -14,6 +18,9 @@ public class UIProcessMonitor implements IExecutionMonitor<Integer,Integer> {
 	
 	private VerticalLayout parent;
 	private VerticalLayout layout = new VerticalLayout();
+	
+	@Autowired
+	private TraceUI traceUI;
 	
 	public void setLayout(VerticalLayout parent) {
 		this.parent = parent;
@@ -43,8 +50,16 @@ public class UIProcessMonitor implements IExecutionMonitor<Integer,Integer> {
 
 	@Override
 	public void end(Payload<Integer, Integer> payload) {	
-		Label lbl = new Label("END.");
-		layout.addComponent(lbl);
+		
+		layout.addComponent(new Label("The process was stoped successfully"));
+		layout.addComponent(new Label("and the payload was stored in database."));
+		layout.addComponent(new Label("Press continue button to watch the process trace"));
+		Button next = new Button("Continue");
+		next.addClickListener(listener -> {
+			parent.removeAllComponents();
+			parent.addComponent(traceUI);
+		});
+		layout.addComponent(next);
 	}
 
 }

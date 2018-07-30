@@ -19,6 +19,7 @@ import io.yamia.autana.director.ProcessDirector;
 import io.yamia.autana.samples.monitors.PersistenceMonitor;
 import io.yamia.autana.samples.monitors.StopOnBreakpointDebuggerMonitor;
 import io.yamia.autana.samples.monitors.UIProcessMonitor;
+import io.yamia.autana.samples.repository.InstanceTraceRepository;
 
 @SpringUI
 public class MainUI extends UI {
@@ -39,6 +40,9 @@ public class MainUI extends UI {
 	
 	@Autowired
 	private PersistenceMonitor persistenceMonitor;
+	
+	@Autowired
+	private InstanceTraceRepository repository;
 	
 	private Slider slider;
 	private VerticalLayout layout;
@@ -80,6 +84,7 @@ public class MainUI extends UI {
 		form.addComponent(slider);
 		Button start = new Button("Iniciar");
 		start.addClickListener(listener -> {
+			repository.deleteAll();
 			director.process(0);
 		});
 		form.addComponent(start);
