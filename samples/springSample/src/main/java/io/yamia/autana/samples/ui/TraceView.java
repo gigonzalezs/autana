@@ -1,4 +1,4 @@
-package io.yamia.autana.samples;
+package io.yamia.autana.samples.ui;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import io.yamia.autana.samples.repository.InstanceTraceRepository;
 
 @SpringComponent
 @UIScope
-public class TraceUI extends VerticalLayout  {
+public class TraceView extends VerticalLayout  {
 
 	private static final long serialVersionUID = 3235761053927417935L;
 	
@@ -34,7 +34,7 @@ public class TraceUI extends VerticalLayout  {
 		grid.addColumn(InstanceTrace::getEvent).setCaption("event");
 		grid.addColumn(InstanceTrace::getPath).setCaption("node path");
 		grid.addColumn(InstanceTrace::getPayload).setCaption("payload JSON");
-		grid.setWidth("90%");
+		grid.setWidth("100%");
 		this.addComponent(grid);
  
 	}

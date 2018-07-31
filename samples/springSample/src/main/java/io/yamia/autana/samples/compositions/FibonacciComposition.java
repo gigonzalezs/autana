@@ -1,13 +1,13 @@
-package io.yamia.autana.samples;
+package io.yamia.autana.samples.compositions;
 
 import org.springframework.stereotype.Component;
 
 import io.yamia.autana.composition.ProcessComposition;
 
 @Component
-public class FibonacciSequenceComposition extends ProcessComposition<Integer, Integer> {
+public class FibonacciComposition extends ProcessComposition<Integer, Integer> {
 	
-	public FibonacciSequenceComposition() {
+	public FibonacciComposition() {
 		createFromDeclarativeCode()
 		.sequence(container -> {
 			container.step(payload -> {
