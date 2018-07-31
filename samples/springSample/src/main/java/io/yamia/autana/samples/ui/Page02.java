@@ -49,6 +49,9 @@ public class Page02 extends VerticalLayout {
 	@Autowired
 	private InstanceTraceRepository repository;
 	
+	@Autowired
+	private String vaadinSessionId;
+	
 	
 	private VerticalLayout parentContainer;
 	private Slider slider;
@@ -66,6 +69,8 @@ public class Page02 extends VerticalLayout {
 			Integer sliderValue = slider.getValue().intValue();
 			return i.compareTo(sliderValue) == 0;
 		});
+		
+		persistenceMonitor.setVaadinSessionId(vaadinSessionId);
 		
 		director
 		.composition(fibonacciComposition)
@@ -125,7 +130,7 @@ public class Page02 extends VerticalLayout {
 		form.addComponent(slider);
 		Button start = new Button("execute process");
 		start.addClickListener(listener -> {
-			repository.deleteAll();
+			repository.deleteBySessionId(vaadinSessionId);
 			director.process(0);
 		});
 		form.addComponent(start);

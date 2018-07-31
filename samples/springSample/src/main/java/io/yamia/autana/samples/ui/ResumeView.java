@@ -44,12 +44,15 @@ public class ResumeView extends VerticalLayout {
 	@Autowired
 	private InstanceTraceRepository repository;
 	
+	@Autowired
+	private String vaadinSessionId;
+	
 	@Override
 	public void attach() {
 		setupComposition();
 		configureLayout();
 		this.addAttachListener(listener -> {
-			repository.findAll().stream()
+			repository.findBySessionId(vaadinSessionId).stream()
 			.sorted(Comparator.comparing(InstanceTrace::getStep).reversed())
 			.findFirst()
 			.ifPresent(trace -> {
@@ -69,6 +72,8 @@ public class ResumeView extends VerticalLayout {
 	}
 	
 	private void setupComposition() {
+		
+		persistenceMonitor.setVaadinSessionId(vaadinSessionId);
 		
 		director
 		.composition(fibonacciComposition)

@@ -11,17 +11,27 @@ import io.yamia.autana.samples.repository.InstanceTraceRepository;
 @Component
 public class PersistenceMonitor extends AbstractPersistenceMonitor<Integer,Integer> {
 	
+	private String vaadinSessionId;
+	
 	@Autowired
 	private InstanceTraceRepository instanceTraceRepository;
 
 	@Override
 	protected AbstractInstanceTrace buildNewInstanceTrace(int step, String event, String path, String payload) {
-		return new InstanceTrace(step, event, path, payload);
+		return new InstanceTrace(vaadinSessionId, step, event, path, payload);
 	}
 
 	@Override
 	protected AbstractInstanceTrace save(AbstractInstanceTrace trace) {
 		return instanceTraceRepository.save((InstanceTrace)trace);
+	}
+	
+	public String getVaadinSessionId() {
+		return vaadinSessionId;
+	}
+
+	public void setVaadinSessionId(String vaadinSessionId) {
+		this.vaadinSessionId = vaadinSessionId;
 	}
 
 }

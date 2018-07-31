@@ -25,6 +25,9 @@ public class TraceView extends VerticalLayout  {
 	@Autowired
 	private InstanceTraceRepository repository;
 	
+	@Autowired
+	private String vaadinSessionId;
+	
 	private Grid<InstanceTrace> grid;
 		
 	@PostConstruct
@@ -47,7 +50,7 @@ public class TraceView extends VerticalLayout  {
 	
 	public void refresh() {
 		ListDataProvider<InstanceTrace> data;
-		List<InstanceTrace> traces = repository.findAll();
+		List<InstanceTrace> traces = repository.findBySessionId(vaadinSessionId);
 		data = DataProvider.fromStream(traces.stream());
 		grid.setDataProvider(data);
 	}
