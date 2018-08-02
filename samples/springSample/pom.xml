@@ -27,7 +27,7 @@
 
 	<dependencies>
 		<dependency>
-			<groupId>io.yamia.autana</groupId>
+			<groupId>io.iunigo.autana</groupId>
 			<artifactId>autana-framework</artifactId>
 			<version>0.0.1</version>
 		</dependency>
